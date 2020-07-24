@@ -7,15 +7,44 @@ import json
 from collections import defaultdict
 import pandas as pd
 
-def load_from_json(cord19_path):
-    """Function that loads from a saved cord19.json file"""
-    if os.path.exists(cord19_path):
-        with open(cord19_path) as json_file:
+def load_dataframe(data):
+    """Function that creates a DataFrame from the json if there is no csv containing it"""
+
+    # Either csv already exists and we can simply load it
+    df_path = os.path.join("data","cord19_df.csv")
+    if os.path.exists(df_path):
+        print("Loading DataFrame...")
+        df = pd.read_csv(df_path)
+
+    # Or..
+    else:
+        print("Creating DataFrame...")
+        # Create a DataFrame instead
+        d = []
+
+        # JSON data contains dictionaries in a list for each entry
+        for _, (_,val) in enumerate(data.items()):
+            val_dict = val[0]
+            title = val_dict['title']
+            abstract = val_dict['abstract']
+            intro = val_dict['introduction']
+
+            d.append((title,abstract,intro))
+
+        # Turn list of tuples into DataFrame and write it to a CSV
+        df = pd.DataFrame(d, columns=('Title', 'Abstract', 'Introduction'))
+        df.to_csv(df_path, index=False)
+
+    return df
+
+def load_from_json(cord19_json_path):
+    """Function that loads the data from a saved cord19.json file"""
+    if os.path.exists(cord19_json_path):
+        with open(cord19_json_path) as json_file:
             data = json.load(json_file)
     else:
         raise ValueError("The provided path does not exist! Please use load_from_parses() to create the json file.")
     return data
-
 
 def load_from_parses():
     """Function to load the CORD-19 dataset from the provided JSONS"""
