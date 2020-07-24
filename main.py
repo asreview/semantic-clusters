@@ -1,4 +1,9 @@
 # imports 
+# System stuff
+import os
+import sys
+import json
+
 # Numerical / data imports
 import numpy as np
 import pandas as pd
@@ -8,6 +13,11 @@ import torch
 
 # Transformers
 from transformers import AutoTokenizer, AutoModelWithLMHead
+
+# Own functions
+from load_data import load_from_parses, load_from_json
+
+
 
 def load_model():
     """Function that loads and returns the CovidBERT model"""
@@ -21,4 +31,14 @@ def load_model():
     return model, tokenizer
 
 if __name__ == "__main__":
-    load_model()
+    model, tokenizer = load_model()
+
+    # Use bulky loader if we don't have the cord19.json yet
+    cord19_path = os.path.join("data", "cord19.json")
+    if not os.path.exists(cord19_path):
+        load_from_parses()
+
+    # Load the file from the created json
+    data = load_from_json(cord19_path)
+
+
