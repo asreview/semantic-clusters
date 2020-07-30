@@ -13,6 +13,7 @@ import torch
 
 # Transformers
 from transformers import AutoTokenizer, AutoModelWithLMHead
+from sentence_transformers import SentenceTransformer, models
 
 # Own functions
 from load_data import load_from_parses, load_from_json, load_dataframe
@@ -37,6 +38,16 @@ def generate_embeddings(model, tokenizer, df):
         print(type(outputs))
         break
 
+    ########################################################
+    ################# CHANGE THIS ##########################
+    ########################################################
+    excerpt_embeddings = model.encode(df_covid.excerpt.tolist(), show_progress_bar=True, batch_size=32)
+    excerpt_embeddings = np.array(excerpt_embeddings)
+    np.save(os.path.join(export_path, 'embeddings_excerpts.npy'), excerpt_embeddings)
+    ########################################################
+    ################# CHANGE THIS ##########################
+    ########################################################
+
 def load_model():
     """Function that loads and returns the CovidBERT model"""
 
@@ -56,6 +67,7 @@ if __name__ == "__main__":
 
     # Load model and tokenizer
     model, tokenizer = load_model()
+    model = SentenceTransformer("./src/models/covidbert/")
 
     # Use bulky loader if we don't have the cord19.json yet
     cord19_json_path = os.path.join("data", "cord19.json")
