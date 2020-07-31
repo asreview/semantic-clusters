@@ -3,6 +3,7 @@
 import os
 import sys
 import json
+import pickle
 
 # Numerical / data imports
 import numpy as np
@@ -12,7 +13,8 @@ import pandas as pd
 import torch
 
 # Transformers
-from transformers import AutoTokenizer, AutoModelWithLMHead
+from transformers import AutoTokenizer, AutoModelWithLMHead, AutoModelForMaskedLM
+from transformers import BertTokenizer, BertModel
 from sentence_transformers import SentenceTransformer, models
 
 # Own functions
@@ -29,21 +31,46 @@ def generate_embeddings(model, tokenizer, df):
     """
     miss_abs = df[df['Abstract'].isnull()]
     no_miss_abs = df.drop(miss_abs.index)
-    for abstract in no_miss_abs['Abstract']:
-        tokenized = tokenizer.encode(abstract)
-        tokens_tensor = torch.tensor(tokenized)
-        print("Size: ",tokens_tensor.size())
-        outputs = model(tokens_tensor.unsqueeze(1)) 
-        print(outputs)
-        print(type(outputs))
-        break
+
+    # Instantiate dict to pickle embeddings
+    embs_dict = {}
+
+    for i, abstract in enumerate(no_miss_abs['Abstract']):
+
+        # Get cord uid and title for article
+        cord_uid = no_miss_abs.iloc[i,0]
+        title = no_miss_abs.iloc[i,1]
+
+        if i % 10 == 0:
+            print(f"Abstract: {i:7d}, cord_uid {cord_uid}")
+
+        # Use (Covid)BERT Tokenizer and get outputs tuple
+        tokenized = tokenizer.encode(abstract, return_tensors="pt")
+        if tokenized.size()[1] > 511:
+            tokenized = tokenized[:,:511]
+            print(tokenized.size()[1])
+        outputs = model(tokenized)
+
+        # Retrieve last hidden states and CLS token
+        last_hidden_states = outputs[0]
+        cls_token = outputs[1]
+        # print("LHS size: ", last_hidden_states.size())
+        # print("CLS size: ", cls_token.size())
+        embs_dict[cord_uid] = cls_token
+
+    # Writing embs dict to pickle
+    pickle_path = os.path.join("data","cls_embs.pickle")
+    with open(pickle_path, "wb") as file:
+        pickle.dump(embs_dict, file)
+
+    print("Did I encode all abstracts and save pickle?")
 
     ########################################################
     ################# CHANGE THIS ##########################
     ########################################################
-    excerpt_embeddings = model.encode(df_covid.excerpt.tolist(), show_progress_bar=True, batch_size=32)
-    excerpt_embeddings = np.array(excerpt_embeddings)
-    np.save(os.path.join(export_path, 'embeddings_excerpts.npy'), excerpt_embeddings)
+    # excerpt_embeddings = model.encode(df_covid.excerpt.tolist(), show_progress_bar=True, batch_size=32)
+    # excerpt_embeddings = np.array(excerpt_embeddings)
+    # np.save(os.path.join(export_path, 'embeddings_excerpts.npy'), excerpt_embeddings)
     ########################################################
     ################# CHANGE THIS ##########################
     ########################################################
@@ -51,11 +78,24 @@ def generate_embeddings(model, tokenizer, df):
 def load_model():
     """Function that loads and returns the CovidBERT model"""
 
-    print("Loading model...")
-    model = AutoModelWithLMHead.from_pretrained("gsarti/covidbert-nli")
-    print("Loading tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained("gsarti/covidbert-nli")
-    print("Finished loading the model successfully!")
+    # print("Loading model...")
+    # model = AutoModelWithLMHead.from_pretrained("gsarti/covidbert-nli")
+    # print("Loading tokenizer...")
+    # print("\n\n")
+    # tokenizer = AutoTokenizer.from_pretrained("gsarti/covidbert-nli")
+    # print("Finished loading the model successfully!")
+
+    # print("Loading model...")
+    # model = AutoModelForMaskedLM.from_pretrained("deepset/covid_bert_base")
+    # print("Loading tokenizer...")
+    # tokenizer = AutoTokenizer.from_pretrained("deepset/covid_bert_base")
+    # print("Finished loading the model successfully!")
+
+    # Load regular BERT for testing purposes
+    print("Loading BERT")
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    model = BertModel.from_pretrained('bert-base-uncased')
+    print("Finished loading BERT")
 
     return model, tokenizer
 
@@ -67,7 +107,7 @@ if __name__ == "__main__":
 
     # Load model and tokenizer
     model, tokenizer = load_model()
-    model = SentenceTransformer("./src/models/covidbert/")
+    #model = SentenceTransformer("./src/models/covidbert/")
 
     # Use bulky loader if we don't have the cord19.json yet
     cord19_json_path = os.path.join("data", "cord19.json")
@@ -79,7 +119,6 @@ if __name__ == "__main__":
 
     # Load dataframe if csv exists, otherwise create it
     df = load_dataframe(data)
-    print(df.head(5))
 
     generate_embeddings(model, tokenizer, df)
 
