@@ -32,7 +32,7 @@ def get_embs(embs_path, emb_shape):
             return embs
 
     # Initialize empty array of emb_shape
-    embs = np.empty(emb_shape)
+    embs = np.empty((0,emb_shape[1]))
 
     for i, file in enumerate(os.listdir(embs_path)):
         #filename = file[:-7] # Remove .pickle
@@ -48,11 +48,25 @@ def get_embs(embs_path, emb_shape):
 
     return embs
 
-def run_PCA(embs):
+def run_pca(embs):
     """Function to perform Principal Components Analysis
     Args:
       embs: 2-dimensional Numpy array of n_samples x n_features containing embeddings
     """
+
+    # Explore number of components
+
+    # e.g. retain % of variance
+    #pca = PCA(n_components=.95)
+
+    # Or just raw number of components
+    pca = PCA(n_components = 50)
+    pca.fit(embs)
+    #print(pca.explained_variance_ratio_)
+
+    # Get array with reduced dimensions
+    embs = pca.fit_transform(embs)
+    print(f"PCA dim: {embs.shape}")
 
 
 if __name__ == "__main__":
@@ -74,3 +88,4 @@ if __name__ == "__main__":
     print(embs.shape)
 
     # Now we can do actual PCA!
+    run_pca(embs)
