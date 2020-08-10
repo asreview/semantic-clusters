@@ -25,14 +25,15 @@ def load_dataframe(data):
         # JSON data contains dictionaries in a list for each entry
         for _, (_,val) in enumerate(data.items()):
             val_dict = val[0]
+            cord_uid = val_dict['cord_uid']
             title = val_dict['title']
             abstract = val_dict['abstract']
             intro = val_dict['introduction']
 
-            d.append((title,abstract,intro))
+            d.append((cord_uid,title,abstract,intro))
 
         # Turn list of tuples into DataFrame and write it to a CSV
-        df = pd.DataFrame(d, columns=('Title', 'Abstract', 'Introduction'))
+        df = pd.DataFrame(d, columns=('cord_uid','Title', 'Abstract', 'Introduction'))
         df.to_csv(df_path, index=False)
 
     return df
@@ -64,7 +65,17 @@ def load_from_parses():
             cord_uid = row['cord_uid']
             title = row['title']
             abstract = row['abstract']
-            authors = row['authors'].split('; ')
+            #authors = row['authors'].split('; ')
+
+            # Abstracts are quite big, so cut them
+            abstract = abstract.split(" ")
+            if len(abstract) > 200:
+                abstract = abstract[:200]
+            abstract = " ".join(abstract)
+
+            # # If we don't have an abstract, use title
+            # if len(abstract) < 5:
+            #     abstract = title
 
             # access the full text (if available) for Intro
             introduction = []
@@ -91,6 +102,7 @@ def load_from_parses():
 
             # save for later usage
             cord_uid_to_text[cord_uid].append({
+                'cord_uid': cord_uid,
                 'title': title,
                 'abstract': abstract,
                 'introduction': introduction
