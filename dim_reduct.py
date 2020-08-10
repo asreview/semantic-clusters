@@ -48,26 +48,23 @@ def get_embs(embs_path, emb_shape):
 
     return embs
 
-def run_pca(embs):
+def run_pca(embs, n_components):
     """Function to perform Principal Components Analysis
     Args:
       embs: 2-dimensional Numpy array of n_samples x n_features containing embeddings
+      n_components: Number of components: num \in [0,1] == percentage of variance retained
     """
 
-    # Explore number of components
-
-    # e.g. retain % of variance
-    #pca = PCA(n_components=.95)
-
-    # Or just raw number of components
-    pca = PCA(n_components = 50)
+    # Number of components is either raw number or percentage of variance retained
+    pca = PCA(n_components = n_components)
     pca.fit(embs)
     #print(pca.explained_variance_ratio_)
 
     # Get array with reduced dimensions
     embs = pca.fit_transform(embs)
     print(f"PCA dim: {embs.shape}")
-
+    
+    return embs
 
 if __name__ == "__main__":
 
@@ -88,4 +85,6 @@ if __name__ == "__main__":
     print(embs.shape)
 
     # Now we can do actual PCA!
-    run_pca(embs)
+    n_components = .95
+    pca_embs = run_pca(embs, n_components)
+
