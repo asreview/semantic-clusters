@@ -29,13 +29,24 @@ def generate_embeddings(model, tokenizer, df):
     Returns:
       embeddings: Contextualized embeddings from the specified model
     """
+
+    # Path structure
+    if not os.path.exists("data"):
+        os.makedirs("data")
+    embs_path = os.path.join("data","embs")
+    if not os.path.exists(embs_path):
+        os.makedirs(embs_path)
+
+    # Only use ones without missing abstracts
+    # (Effectively circumvented using titles instead while building abstracts)
     miss_abs = df[df['Abstract'].isnull()]
     no_miss_abs = df.drop(miss_abs.index)
 
-    # Instantiate dict to pickle embeddings
-    embs_dict = {}
-
     for i, abstract in enumerate(no_miss_abs['Abstract']):
+
+        # Only do it for first 10000
+        if i > 10000:
+            break
 
         # Get cord uid and title for article
         cord_uid = no_miss_abs.iloc[i,0]
@@ -46,34 +57,26 @@ def generate_embeddings(model, tokenizer, df):
 
         # Use (Covid)BERT Tokenizer and get outputs tuple
         tokenized = tokenizer.encode(abstract, return_tensors="pt")
-        if tokenized.size()[1] > 511:
-            tokenized = tokenized[:,:511]
-            print(tokenized.size()[1])
         outputs = model(tokenized)
 
         # Retrieve last hidden states and CLS token
-        last_hidden_states = outputs[0]
+        #last_hidden_states = outputs[0]
         cls_token = outputs[1]
+        #print(cls_token.size())
+
         # print("LHS size: ", last_hidden_states.size())
         # print("CLS size: ", cls_token.size())
-        embs_dict[cord_uid] = cls_token
 
-    # Writing embs dict to pickle
-    pickle_path = os.path.join("data","cls_embs.pickle")
-    with open(pickle_path, "wb") as file:
-        pickle.dump(embs_dict, file)
+        # Build dict
+        #embs_dict[cord_uid] = cls_token
+
+        # Write single CLS token to file to prevent RAM build-up
+        cls_token = cls_token.detach().numpy()
+        embs_file = os.path.join("data","embs_np", str(cord_uid)+".pickle")
+        with open(embs_file, "wb+") as file:
+            pickle.dump(cls_token, file)
 
     print("Did I encode all abstracts and save pickle?")
-
-    ########################################################
-    ################# CHANGE THIS ##########################
-    ########################################################
-    # excerpt_embeddings = model.encode(df_covid.excerpt.tolist(), show_progress_bar=True, batch_size=32)
-    # excerpt_embeddings = np.array(excerpt_embeddings)
-    # np.save(os.path.join(export_path, 'embeddings_excerpts.npy'), excerpt_embeddings)
-    ########################################################
-    ################# CHANGE THIS ##########################
-    ########################################################
 
 def load_model():
     """Function that loads and returns the CovidBERT model"""
@@ -120,6 +123,7 @@ if __name__ == "__main__":
     # Load dataframe if csv exists, otherwise create it
     df = load_dataframe(data)
 
-    generate_embeddings(model, tokenizer, df)
-
-
+    # If embeddings don't exist, create them
+    embs_path = os.path.join("data","embs")
+    if len(os.listdir(embs_path)) == 0 or not os.path.exists(embs_path):
+        generate_embeddings(model, tokenizer, df)

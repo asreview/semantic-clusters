@@ -65,7 +65,17 @@ def load_from_parses():
             cord_uid = row['cord_uid']
             title = row['title']
             abstract = row['abstract']
-            authors = row['authors'].split('; ')
+            #authors = row['authors'].split('; ')
+
+            # Abstracts are quite big, so cut them
+            abstract = abstract.split(" ")
+            if len(abstract) > 200:
+                abstract = abstract[:200]
+            abstract = " ".join(abstract)
+
+            # # If we don't have an abstract, use title
+            # if len(abstract) < 5:
+            #     abstract = title
 
             # access the full text (if available) for Intro
             introduction = []
