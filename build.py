@@ -44,7 +44,7 @@ def generate_embeddings(model, tokenizer, df):
 
     for i, abstract in enumerate(no_miss_abs['Abstract']):
 
-        # Only do it for first 10000
+        # Only do it for first 10001
         if i > 10000:
             break
 
@@ -71,7 +71,10 @@ def generate_embeddings(model, tokenizer, df):
         #embs_dict[cord_uid] = cls_token
 
         # Write single CLS token to file to prevent RAM build-up
-        cls_token = cls_token.detach().numpy()
+        # Cast to np if true
+        to_numpy = True 
+        if to_numpy:
+            cls_token = cls_token.detach().numpy()
         embs_file = os.path.join("data","embs_np", str(cord_uid)+".pickle")
         with open(embs_file, "wb+") as file:
             pickle.dump(cls_token, file)
