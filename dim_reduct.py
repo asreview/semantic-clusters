@@ -13,8 +13,12 @@ import pickle
 import numpy as np 
 import pandas as pd 
 
-# PCA
+# Dimensionality Reduction
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+
+# Plotting
+import matplotlib.pyplot as plt
 
 def get_embs(embs_path, emb_shape):
     """Function to retrieve all embedding vectors from corresponding files
@@ -62,14 +66,56 @@ def run_pca(embs, n_components):
 
     # Get array with reduced dimensions
     embs = pca.fit_transform(embs)
-    print(f"PCA dim: {embs.shape}")
     
     return embs
+
+def t_sne(embs, n_iter):
+    """Function to perform t-distributed Stochastic Neighbor Embedding
+    Args:
+      embs: Numpy array of n_samples x n_pca_components with PCA embeddings
+    """
+
+    # Build 
+    t_sne_embeddings = TSNE(n_components=2,
+                            #n_iter=100000,
+                            n_iter=n_iter,
+                            perplexity=3,
+                            n_jobs=4,
+                            learning_rate=1000,
+                            early_exaggeration=25).fit_transform(embs)
+
+    return t_sne_embeddings
+
+def plot_embs(embs, filenames, n_iter):
+    """Function to plot (t-sne) embedding
+    Args:
+      embs: Numpy array of n_samples x n_t_sne_components with (t-sne) embeddings
+    """
+
+    # Get fig and ax
+    fig, ax = plt.subplots()
+
+    # Get t-sne components
+    x = embs[:,0]
+    y = embs[:,1]
+
+    # Generate DataFrame
+    data = {'cord_uid': filenames, 'x': x, 'y': y}
+    df = pd.DataFrame(data)
+    df.to_csv('tsne_df')
+
+    # Do actual plotting and save image
+    ax.plot(x,y, 'o')
+    if not os.path.exists("img"):
+        os.makedirs("img")
+    filename = f"tsne{n_iter}.png"
+    img_path = os.path.join("img",filename)
+    fig.savefig(img_path)
 
 if __name__ == "__main__":
 
     # Path to embeddings
-    embs_path = os.path.join("data","embs_np")
+    embs_path = os.path.join("data","embs")
 
     # Get embedding size
     for file in os.listdir(embs_path):
@@ -85,6 +131,19 @@ if __name__ == "__main__":
     print(embs.shape)
 
     # Now we can do actual PCA!
-    n_components = .95
+    n_components = .98
     pca_embs = run_pca(embs, n_components)
+    print(f"PCA dim: {pca_embs.shape}")
 
+    # Get all filenames
+    filenames = []
+    for i, filename in enumerate(os.listdir(embs_path)):
+        filenames.append(filename[:-7])
+
+    # And proceed with t-SNE
+    n_iter = 1000000
+    n_iter = 2000
+    t_sne_embs = t_sne(pca_embs,n_iter)
+
+    # Plot result
+    plot_embs(t_sne_embs, filenames,n_iter)
