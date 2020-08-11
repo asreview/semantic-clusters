@@ -102,7 +102,7 @@ def plot_embs(embs, filenames, n_iter):
     # Generate DataFrame
     data = {'cord_uid': filenames, 'x': x, 'y': y}
     df = pd.DataFrame(data)
-    df.to_csv('tsne_df')
+    df.to_csv('tsne_df.csv', index=None)
 
     # Do actual plotting and save image
     ax.plot(x,y, 'o')
