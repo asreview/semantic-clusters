@@ -79,10 +79,10 @@ def t_sne(embs, n_iter):
     t_sne_embeddings = TSNE(n_components=2,
                             #n_iter=100000,
                             n_iter=n_iter,
-                            perplexity=3,
+                            perplexity=6,
                             n_jobs=4,
-                            learning_rate=1000,
-                            early_exaggeration=25).fit_transform(embs)
+                            learning_rate=2000,
+                            early_exaggeration=12).fit_transform(embs)
 
     return t_sne_embeddings
 
@@ -141,8 +141,7 @@ if __name__ == "__main__":
         filenames.append(filename[:-7])
 
     # And proceed with t-SNE
-    n_iter = 1000000
-    n_iter = 2000
+    n_iter = 200000
     t_sne_embs = t_sne(pca_embs,n_iter)
 
     # Plot result
