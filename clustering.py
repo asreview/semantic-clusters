@@ -53,18 +53,30 @@ def visualize_clusters(df):
     fig.savefig(img_path)
     
 if __name__ == "__main__":
-    df = pd.read_csv("tsne_df.csv")
+
+    # Get t-SNE features
+    tsne_df_path = os.path.join("data","dataframes","tsne_df.csv")
+    df = pd.read_csv(tsne_df_path)
     print(df.head())
     features = df.iloc[:,1:].values
-    print(features)
     
     # Define parameters
     n_clusters = 10
     n_init = 10
 
-    labels = run_KMeans(features, n_clusters, n_init)
-    df['cluster_id'] = labels
-    print()
-    print(df.head())
+    # Either check if we have kmeans df and load
+    kmeans_df_path = os.path.join("data","dataframes","kmeans_df.csv")
+    if os.path.exists(kmeans_df_path):
+        print("Loading saved KMeans dataframe!")
+        df = pd.read_csv(kmeans_df_path)
 
+    # .. or Run KMeans and add resulting clusters to dataframe
+    else:
+        labels = run_KMeans(features, n_clusters, n_init)
+        df['cluster_id'] = labels
+        print()
+        print(df.head())
+        df.to_csv(kmeans_df_path, index=None)
+
+    # Do some preliminary matplotlib plotting
     visualize_clusters(df)
