@@ -34,7 +34,6 @@ def run_app():
     fig.update_layout(xaxis=dict(showticklabels=False, title=""), 
                       yaxis=dict(showticklabels=False, ticks="", title=""))
     config = dict({'scrollZoom': True, 'displayModeBar':False, 'displaylogo':False})
-    # fig.show(config=config)
 
     # Initialize app and do lay-out
     app = dash.Dash()
@@ -43,7 +42,6 @@ def run_app():
         # banner div
         html.Div([
             html.H2("CORD-19: Visualizing Semantic Clusters"),
-            #html.Img(src="/assets/stock-icon.png")
         ], className="banner"),
 
         # external css div
@@ -93,7 +91,6 @@ def run_app():
             abstract_idx = hover_dict['pointIndex']
 
             # Set variable for abstract window update
-            #cord_uid = df['cord_uid'].iloc[abstract_idx]
             abstract = df['Abstract'].iloc[abstract_idx]
 
             # Set hoverData to None again to prevent issues with graph update
@@ -102,10 +99,9 @@ def run_app():
             #cord_uid = df['cord_uid'].iloc[0]
             abstract = df['Abstract'].iloc[0]
 
-        #return cord_uid
         return abstract
 
-    # Callback to refresh Abstract window
+    # Callback to refresh article title
     @app.callback(dash.dependencies.Output("paper-title", "children"),
                 [Input('cluster-div', 'hoverData')])
     def update_title(hoverData):
@@ -124,7 +120,6 @@ def run_app():
             # Set hoverData to None again to prevent issues with graph update
             hoverData = None
         else:
-            #cord_uid = df['cord_uid'].iloc[0]
             title = df['Title'].iloc[0]
 
         return title
@@ -134,7 +129,6 @@ def run_app():
 
 if __name__ == "__main__":
     run_app()
-
 
 """Goes into update_abstract function"""
 # # Make temp chart - we just want to change title for now
