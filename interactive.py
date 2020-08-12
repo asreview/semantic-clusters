@@ -17,7 +17,6 @@ from dash.dependencies import Output, Input
 import plotly.graph_objs as go
 import plotly.express as px
 
-
 def run_app():
     """Function to be called to run the full Dash App"""
     
@@ -25,9 +24,15 @@ def run_app():
     df_path = os.path.join("data","dataframes","kmeans_df.csv")
     df = pd.read_csv(df_path)
 
+    # Read as STR for discrete colormap
+    df['cluster_id'] = df['cluster_id'].astype(str)
+
     # Show main figure
-    fig = px.scatter(df, x="x", y="y", color="cluster_id", color_discrete_map=px.colors.sequential.Viridis)
+    #fig = px.scatter(df, x="x", y="y", color="cluster_id", color_discrete_map=px.colors.sequential.Viridis)
+    fig = px.scatter(df, x="x", y="y", color="cluster_id", color_discrete_sequence=px.colors.qualitative.T10)
     fig.update_layout(dragmode="pan")
+    fig.update_layout(xaxis=dict(showticklabels=False, title=""), 
+                      yaxis=dict(showticklabels=False, ticks="", title=""))
     config = dict({'scrollZoom': True, 'displayModeBar':False, 'displaylogo':False})
     # fig.show(config=config)
 
@@ -44,14 +49,21 @@ def run_app():
         # external css div
         html.Div([
 
-            # Main gapminder graph
+            # Main semantic cluster graph
             html.Div([
                 dcc.Graph(figure=fig,id="cluster-div",config=config)
             ], className = "six columns"),
 
-            # Div for second graph
-            html.Div([
-                dcc.Graph(id="abstract-div")
+            # Div for abstract window
+            html.Div([ 
+                html.H3("Test Title", id="paper-title"),
+                dcc.Textarea(
+                    readOnly=True,
+                    placeholder='Enter a value...',
+                    value='This is a TextArea component',
+                    style={'width': '100%','height':'300px'},
+                    id="abstract-div"
+                )  
             ], className = "six columns"),
 
         ], className="row"),
@@ -68,7 +80,7 @@ def run_app():
     ############################
 
     # Callback to refresh Abstract window
-    @app.callback(dash.dependencies.Output("abstract-div", "figure"),
+    @app.callback(dash.dependencies.Output("abstract-div", "value"),
                 [Input('cluster-div', 'hoverData')])
     def update_abstract(hoverData):
 
@@ -81,60 +93,63 @@ def run_app():
             abstract_idx = hover_dict['pointIndex']
 
             # Set variable for abstract window update
-            cord_uid = df['cord_uid'].iloc[abstract_idx]
+            #cord_uid = df['cord_uid'].iloc[abstract_idx]
+            abstract = df['Abstract'].iloc[abstract_idx]
 
             # Set hoverData to None again to prevent issues with graph update
             hoverData = None
         else:
-            cord_uid = df['cord_uid'].iloc[0]
+            #cord_uid = df['cord_uid'].iloc[0]
+            abstract = df['Abstract'].iloc[0]
 
-        # Make temp chart - we just want to change title for now
-        temp_chart = go.Scatter(
-            x = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-            y = [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225],
-            name="abstract-window",
-        )
-        temp_chart = [temp_chart]
+        #return cord_uid
+        return abstract
 
-        # Change layout so we can change title
-        abstract_layout = dict(
-            title=f"{cord_uid}"
-        )
+    # Callback to refresh Abstract window
+    @app.callback(dash.dependencies.Output("paper-title", "children"),
+                [Input('cluster-div', 'hoverData')])
+    def update_title(hoverData):
 
-        abstract_fig = dict(data=temp_chart, layout=abstract_layout)
-        return abstract_fig
+        # Fetch df
+        nonlocal df
 
-    # # Callback to update semantic cluster graph
-    # @app.callback(dash.dependencies.Output("cluster-div", "figure"),
-    #             [Input('x-axis', 'value')])
-    # def update_clusters(input_x):
+        # Update graph with hoverData
+        if hoverData != None:
+            hover_dict = hoverData['points'][0]
+            title_idx = hover_dict['pointIndex']
 
-    #     # Fetch df
-    #     nonlocal df
+            # Set variable for paper title update
+            title = df['Title'].iloc[title_idx]
 
-    #     # Make scatter plot with all stuff
-    #     clusters = go.Scatter(
-    #         x = list(df.x),
-    #         y = list(df.y),
-    #         hovertext = list(df.cord_uid),
-    #         mode = 'markers',
-    #         marker = dict(color = list(df.cluster_id),
-    #                     colorscale='Viridis'),
-    #         name="clusters"
-    #     )
+            # Set hoverData to None again to prevent issues with graph update
+            hoverData = None
+        else:
+            #cord_uid = df['cord_uid'].iloc[0]
+            title = df['Title'].iloc[0]
 
-    #     # Put scatter in list, get layout and make fig
-    #     data = [clusters]
-    #     #title = "{} and {}".format(input_y, input_x)
-    #     title = "Hey"
-    #     layout = dict(title=title,
-    #                 showlegend=False)
-    #     clusters_fig = dict(data=data, layout=layout)
-
-    #     return clusters_fig
+        return title
 
     # Run the application
     app.run_server(debug=True)
 
 if __name__ == "__main__":
     run_app()
+
+
+"""Goes into update_abstract function"""
+# # Make temp chart - we just want to change title for now
+# temp_chart = go.Scatter(
+#     x = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+#     y = [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225],
+#     name="abstract-window",
+# )
+
+# temp_chart = dcc
+# temp_chart = [temp_chart]
+
+# # Change layout so we can change title
+# abstract_layout = dict(
+#     title=f"{cord_uid}"
+# )
+
+# abstract_fig = dict(data=temp_chart, layout=abstract_layout)
