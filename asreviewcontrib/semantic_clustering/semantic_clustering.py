@@ -26,7 +26,7 @@ from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 logging.set_verbosity_error()
 
-#import tqdm
+# import tqdm
 
 
 def SemanticClustering(asreview_data_object):
@@ -49,13 +49,22 @@ def SemanticClustering(asreview_data_object):
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    data['tokenized'] = data['abstract'].apply(lambda x: tokenizer.encode(
+    data['tokenized'] = data['abstract'].apply(lambda x: tokenizer.encode_plus(
         x,
         padding='longest',
-        add_special_tokens=True,
+        add_special_tokens=False,
         return_tensors="pt"))
 
-    print(data)
+    # generate embeddings
+    print("Generating embeddings...")
+    data['embeddings'] = data['tokenized'].apply(
+        lambda x: model(**x, output_hidden_states=False)[-1])
+
+    from dim_reduct import run_pca
+    n_components = .98
+    #pca = run_pca(data['embeddings'], n_components)
+
+    print(data['embeddings'][0].detach().numpy())
 
 
 def load_data(asreview_data_object):
