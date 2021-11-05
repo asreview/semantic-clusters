@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # imports
+from sklearn.cluster import KMeans
+from numpy.linalg import norm
 import os
 from tqdm import tqdm
 from dim_reduct import run_pca
@@ -36,7 +38,7 @@ def SemanticClustering(asreview_data_object):
     data = load_data(asreview_data_object)
 
     # cut data for testing
-    data = data.iloc[:300, :]
+    data = data.iloc[:30, :]
 
     # load scibert transformer
     print("Loading scibert transformer...")
@@ -55,7 +57,7 @@ def SemanticClustering(asreview_data_object):
             add_special_tokens=False,
             truncation=True,
             max_length=512,
-            padding='max_length',
+            # padding='max_length',
             return_tensors='pt'))
 
     # generate embeddings and format correctly
@@ -75,14 +77,48 @@ def SemanticClustering(asreview_data_object):
     print("Running t-SNE...")
     tsne = t_sne(pca, n_iter=1000)
 
+    # calculate optimal number of clusters
+    print("Calculating optimal number of clusters...")
+    n_clusters = calc_optimal_n_clusters(tsne)
+    print("Optimal number of clusters: ", n_clusters)
+
     # run k-means
     print("Running k-means...")
-    labels = run_KMeans(tsne, 10, 10)
+    labels = run_KMeans(tsne, n_clusters, 10)
 
     # visualize clusters
     print("Visualizing clusters...")
     tsne_data = [tsne[:, 0], tsne[:, 1]]
     visualize_clusters(tsne_data, labels)
+
+
+# Optimal n clusters, very inefficient, to be done over later
+def calc_optimal_n_clusters(features):
+
+    Sum_of_squared_distances = []
+
+    K = range(1, 25)
+    for k in K:
+        km = KMeans(n_clusters=k)
+        km = km.fit(features)
+        Sum_of_squared_distances.append(km.inertia_)
+
+    max = 0
+    clusters = 1
+
+    for i in K:
+        p1 = np.asarray((Sum_of_squared_distances[0], 1))
+        p2 = np.asarray(
+            (Sum_of_squared_distances[-1], (len(Sum_of_squared_distances)+1)))
+        p3 = np.asarray((Sum_of_squared_distances[i-1], i))
+
+        m = np.cross(p2-p1, p3-p1)/norm(p2-p1)
+
+        if m > max:
+            max = m
+            clusters = i
+
+    return clusters
 
 
 def visualize_clusters(data, labels):
