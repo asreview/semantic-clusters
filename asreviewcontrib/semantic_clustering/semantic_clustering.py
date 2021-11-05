@@ -13,7 +13,10 @@
 # limitations under the License.
 
 # import ASReview
+from tqdm import tqdm
 from dim_reduct import run_pca
+from dim_reduct import t_sne
+from dim_reduct import plot_embs
 from asreview.data import ASReviewData
 
 # import numpy
@@ -26,6 +29,9 @@ from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 logging.set_verbosity_error()
 
+#import tqdm
+tqdm.pandas()
+
 
 def SemanticClustering(asreview_data_object):
 
@@ -34,7 +40,7 @@ def SemanticClustering(asreview_data_object):
     data = load_data(asreview_data_object)
 
     # cut data for testing
-    data = data.iloc[:10, :]
+    data = data.iloc[:300, :]
 
     # load scibert transformer
     print("Loading scibert transformer...")
@@ -47,22 +53,31 @@ def SemanticClustering(asreview_data_object):
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    data['tokenized'] = data['abstract'].apply(lambda x: tokenizer.encode_plus(
+    data['tokenized'] = data['abstract'].progress_apply(lambda x: tokenizer.encode_plus(
         x,
-        padding='longest',
         add_special_tokens=False,
-        return_tensors="pt"))
+        max_length=512,
+        pad_to_max_length=True,
+        return_tensors='pt'))
 
     # generate embeddings and format correctly
     print("Generating embeddings...")
-    data['embeddings'] = data['tokenized'].apply(
-        lambda x: model(**x, output_hidden_states=False)[-1].detach().numpy().squeeze())
+    data['embeddings'] = data['tokenized'].progress_apply(lambda x: model(
+        **x,
+        output_hidden_states=False)[-1].detach().numpy().squeeze())
 
-    # run pca and add to data
+    # from here on the data is not directly attached to the dataframe anymore,
+    # as a result of legacy code. This will be fixed in a future PR.
+
+    # run pca
     print("Running PCA...")
     pca = run_pca(data['embeddings'].tolist(), n_components=.98)
 
-    print(pca)
+    # run t-sne
+    print("Running t-SNE...")
+    tsne = t_sne(pca, n_iter=1000)
+
+    plot_embs(tsne, None, 1000)
 
 
 def load_data(asreview_data_object):
