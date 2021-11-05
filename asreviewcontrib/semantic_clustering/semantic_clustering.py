@@ -12,24 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# import ASReview
+# imports
+import os
 from tqdm import tqdm
 from dim_reduct import run_pca
 from dim_reduct import t_sne
-from dim_reduct import plot_embs
+from clustering import run_KMeans
 from asreview.data import ASReviewData
-
-# import numpy
 import numpy as np
-
-# import transformer autotokenizer and automodel
 from transformers import AutoTokenizer, AutoModel
-
-# disable transformer warning
 from transformers import logging
+import matplotlib.pyplot as plt
+import seaborn as sns
 logging.set_verbosity_error()
-
-#import tqdm
+sns.set()
 tqdm.pandas()
 
 
@@ -53,12 +49,14 @@ def SemanticClustering(asreview_data_object):
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    data['tokenized'] = data['abstract'].progress_apply(lambda x: tokenizer.encode_plus(
-        x,
-        add_special_tokens=False,
-        max_length=512,
-        pad_to_max_length=True,
-        return_tensors='pt'))
+    data['tokenized'] = data['abstract'].progress_apply(
+        lambda x: tokenizer.encode_plus(
+            x,
+            add_special_tokens=False,
+            truncation=True,
+            max_length=512,
+            padding='max_length',
+            return_tensors='pt'))
 
     # generate embeddings and format correctly
     print("Generating embeddings...")
@@ -77,7 +75,32 @@ def SemanticClustering(asreview_data_object):
     print("Running t-SNE...")
     tsne = t_sne(pca, n_iter=1000)
 
-    plot_embs(tsne, None, 1000)
+    # run k-means
+    print("Running k-means...")
+    labels = run_KMeans(tsne, 10, 10)
+
+    # visualize clusters
+    print("Visualizing clusters...")
+    tsne_data = [tsne[:, 0], tsne[:, 1]]
+    visualize_clusters(tsne_data, labels)
+
+
+def visualize_clusters(data, labels):
+    fig, ax = plt.subplots()
+    ax.set_title("semantic clustering")
+    ax.set_xlabel("t-SNE Component 1")
+    ax.set_ylabel("t-SNE Component 2")
+
+    x = data[0]
+    y = data[1]
+
+    # Do actual plotting and save image
+    ax.scatter(x, y, c=labels, cmap="Set3")
+    if not os.path.exists("img"):
+        os.makedirs("img")
+    filename = "clusters.png"
+    img_path = os.path.join("img", filename)
+    fig.savefig(img_path)
 
 
 def load_data(asreview_data_object):
