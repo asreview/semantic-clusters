@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # import ASReview
-from tqdm import tqdm
+from dim_reduct import run_pca
 from asreview.data import ASReviewData
 
 # import numpy
@@ -25,8 +25,6 @@ from transformers import AutoTokenizer, AutoModel
 # disable transformer warning
 from transformers import logging
 logging.set_verbosity_error()
-
-# import tqdm
 
 
 def SemanticClustering(asreview_data_object):
@@ -55,16 +53,16 @@ def SemanticClustering(asreview_data_object):
         add_special_tokens=False,
         return_tensors="pt"))
 
-    # generate embeddings
+    # generate embeddings and format correctly
     print("Generating embeddings...")
     data['embeddings'] = data['tokenized'].apply(
-        lambda x: model(**x, output_hidden_states=False)[-1])
+        lambda x: model(**x, output_hidden_states=False)[-1].detach().numpy().squeeze())
 
-    from dim_reduct import run_pca
-    n_components = .98
-    #pca = run_pca(data['embeddings'], n_components)
+    # run pca and add to data
+    print("Running PCA...")
+    pca = run_pca(data['embeddings'].tolist(), n_components=.98)
 
-    print(data['embeddings'][0].detach().numpy())
+    print(pca)
 
 
 def load_data(asreview_data_object):
