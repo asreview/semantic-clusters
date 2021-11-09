@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Copyright 2021 The ASReview Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +28,8 @@ from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
+import getopt
 logging.set_verbosity_error()
 sns.set()
 tqdm.pandas()
@@ -88,11 +92,26 @@ def SemanticClustering(asreview_data_object):
 
     # visualize clusters
     print("Visualizing clusters...")
-    tsne_data = [tsne[:, 0], tsne[:, 1]]
-    visualize_clusters(tsne_data, labels)
+    visualize_clusters(tsne, labels)
+
+    # create file for use in interactive dashboard
+    create_file(data, tsne, labels)
 
 
-# Optimal n clusters, very inefficient, to be done over later
+# Create functional dataframe and store to file for use in interactive dashboard
+def create_file(data, coords, labels):
+    data['x'] = coords[:, 0]
+    data['y'] = coords[:, 1]
+    data['cluster_id'] = labels
+
+    if not os.path.exists("data"):
+        os.makedirs("data")
+
+    kmeans_df_path = os.path.join("data", "kmeans_df.csv")
+    data.to_csv(kmeans_df_path, index=None)
+
+
+# Optimal n clusters, very inefficient, to be corrected in a future PR
 def calc_optimal_n_clusters(features):
 
     Sum_of_squared_distances = []
@@ -121,14 +140,14 @@ def calc_optimal_n_clusters(features):
     return clusters
 
 
-def visualize_clusters(data, labels):
+def visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
     ax.set_title("semantic clustering")
     ax.set_xlabel("t-SNE Component 1")
     ax.set_ylabel("t-SNE Component 2")
 
-    x = data[0]
-    y = data[1]
+    x = tsne[:, 0]
+    y = tsne[:, 1]
 
     # Do actual plotting and save image
     ax.scatter(x, y, c=labels, cmap="Set3")
@@ -151,5 +170,25 @@ def load_data(asreview_data_object):
 
 
 if __name__ == "__main__":
-    filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
+    filepath =
     SemanticClustering(ASReviewData.from_file(filepath))
+
+
+def main(argv):
+    filepath = ''
+
+    try:
+        opts, args = getopt.getopt(argv, "hi:o:", ["filepath="])
+    except getopt.GetoptError:
+        print('test.py -f <filepath>')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-f':
+            filepath = arg
+        elif opt in ("-t", "--testfile"):
+            filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
+    print('Running from file: ', filepath)
+
+
+if __name__ == "__main__":
+    SemanticClustering(ASReviewData.from_file(sys.argv[1:]))
