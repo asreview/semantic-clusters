@@ -24,12 +24,7 @@ usage can be:
 py asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
 ```
 
-```console
-py asreviewcontrib\semantic_clustering\main.py -f
-py asreviewcontrib\semantic_clustering\main.py --filepath
-```
-
-### Processing example
+### Processing testfile
 ```console
 py asreviewcontrib\semantic_clustering\main.py -t
 py asreviewcontrib\semantic_clustering\main.py --testfile
