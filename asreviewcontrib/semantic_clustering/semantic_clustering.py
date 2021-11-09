@@ -120,16 +120,16 @@ def calc_optimal_n_clusters(features):
     for k in K:
         km = KMeans(n_clusters=k)
         km = km.fit(features)
-        Sum_of_squared_distances.append(km.inertia_)
+        sum_of_squared_distances.append(km.inertia_)
 
     max = 0
     clusters = 1
 
     for i in K:
-        p1 = np.asarray((Sum_of_squared_distances[0], 1))
+        p1 = np.asarray((sum_of_squared_distances[0], 1))
         p2 = np.asarray(
-            (Sum_of_squared_distances[-1], (len(Sum_of_squared_distances)+1)))
-        p3 = np.asarray((Sum_of_squared_distances[i-1], i))
+            (sum_of_squared_distances[-1], (len(sum_of_squared_distances)+1)))
+        p3 = np.asarray((sum_of_squared_distances[i-1], i))
 
         m = np.cross(p2-p1, p3-p1)/norm(p2-p1)
 
