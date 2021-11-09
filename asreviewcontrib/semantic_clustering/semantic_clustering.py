@@ -22,14 +22,11 @@ from tqdm import tqdm
 from dim_reduct import run_pca
 from dim_reduct import t_sne
 from clustering import run_KMeans
-from asreview.data import ASReviewData
 import numpy as np
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
-import sys
-import getopt
 logging.set_verbosity_error()
 sns.set()
 tqdm.pandas()
@@ -39,7 +36,7 @@ def SemanticClustering(asreview_data_object):
 
     # load data
     print("Loading data...")
-    data = load_data(asreview_data_object)
+    data = _load_data(asreview_data_object)
 
     # cut data for testing
     data = data.iloc[:30, :]
@@ -83,7 +80,7 @@ def SemanticClustering(asreview_data_object):
 
     # calculate optimal number of clusters
     print("Calculating optimal number of clusters...")
-    n_clusters = calc_optimal_n_clusters(tsne)
+    n_clusters = _calc_optimal_n_clusters(tsne)
     print("Optimal number of clusters: ", n_clusters)
 
     # run k-means
@@ -92,14 +89,14 @@ def SemanticClustering(asreview_data_object):
 
     # visualize clusters
     print("Visualizing clusters...")
-    visualize_clusters(tsne, labels)
+    _visualize_clusters(tsne, labels)
 
     # create file for use in interactive dashboard
-    create_file(data, tsne, labels)
+    _create_file(data, tsne, labels)
 
 
-# Create functional dataframe and store to file for use in interactive dashboard
-def create_file(data, coords, labels):
+# Create functional dataframe and store to file for use in interactive
+def _create_file(data, coords, labels):
     data['x'] = coords[:, 0]
     data['y'] = coords[:, 1]
     data['cluster_id'] = labels
@@ -112,7 +109,7 @@ def create_file(data, coords, labels):
 
 
 # Optimal n clusters, very inefficient, to be corrected in a future PR
-def calc_optimal_n_clusters(features):
+def _calc_optimal_n_clusters(features):
 
     sum_of_squared_distances = []
 
@@ -140,7 +137,7 @@ def calc_optimal_n_clusters(features):
     return clusters
 
 
-def visualize_clusters(tsne, labels):
+def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
     ax.set_title("semantic clustering")
     ax.set_xlabel("t-SNE Component 1")
@@ -158,7 +155,7 @@ def visualize_clusters(tsne, labels):
     fig.savefig(img_path)
 
 
-def load_data(asreview_data_object):
+def _load_data(asreview_data_object):
 
     # extract title and abstract, drop empty abstracts and reset index
     data = asreview_data_object.df[['title', 'abstract']].copy()
@@ -167,31 +164,3 @@ def load_data(asreview_data_object):
     data = data.reset_index(drop=True)
 
     return data
-
-
-def main(argv):
-    filepath = ""
-
-    try:
-        opts, args = getopt.getopt(
-            argv, "htf:", ["help", "testfile", "filepath="])
-    except getopt.GetoptError:
-        print('Please use the following format:')
-        print('test.py -f <filepath>')
-        print('test.py --testfile')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            print('test.py -f <filepath> or --testfile')
-            sys.exit()
-        elif opt in ("-f", "--filepath"):
-            filepath = arg
-        elif opt in ("-t", "--testfile"):
-            filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
-    print('Running from file: ', filepath)
-
-    SemanticClustering(ASReviewData.from_file(filepath))
-
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
