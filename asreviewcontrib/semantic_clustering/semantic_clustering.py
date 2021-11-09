@@ -44,7 +44,7 @@ def SemanticClustering(asreview_data_object):
     data = _load_data(asreview_data_object)
 
     # cut data for testing
-    data = data.iloc[:1000, :]
+    # data = data.iloc[:1000, :]
 
     # load scibert transformer
     print("Loading scibert transformer...")
