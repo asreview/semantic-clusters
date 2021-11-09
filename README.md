@@ -42,7 +42,7 @@ py asreviewcontrib\semantic_clustering\main.py --app
 After the processing has finished with either a new file or the test file, a
 file called `kmeans_df.csv` has appeared in the data folder. This file can be
 used in the interactive app. When the server has been started with the command
-above, it can be found at `http://127.0.0.1:8050/` in your browser.
+above, it can be found at [http://127.0.0.1:8050/](http://127.0.0.1:8050/) in your browser.
 
 ## License
 
