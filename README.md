@@ -10,6 +10,7 @@ differences. The end result is an interactive dashboard:
 The usage of the semantic clustering app is found in the main.py file. The
 following commands can be run:
 
+### Processing
 ```bash
 py asreviewcontrib\semantic_clustering\main.py -f
 py asreviewcontrib\semantic_clustering\main.py --filepath
@@ -23,14 +24,30 @@ following way:
 py asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
 ```
 
+```bash
+py asreviewcontrib\semantic_clustering\main.py -f
+py asreviewcontrib\semantic_clustering\main.py --filepath
+```
 
+### Processing example
+```bash
+py asreviewcontrib\semantic_clustering\main.py -t
+py asreviewcontrib\semantic_clustering\main.py --testfile
+```
 
+This argument will start the processing file using the `van_de_Schoot_2017`
+dataset, and can be used as a quick functionality test.
 
+### Interactive app
+```bash
+py asreviewcontrib\semantic_clustering\main.py -a
+py asreviewcontrib\semantic_clustering\main.py --app
+```
 
-        print('Please use the following format:')
-        print('test.py -f <filepath>')
-        print('test.py --testfile')
-        print('test.py --app')
+After the processing has finished with either a new file or the test file, a
+file called `kmeans_df.csv` has appeared in the data folder. This file can be
+used in the interactive app. When the server has been started with the command
+above, it can be found at `http://127.0.0.1:8050/` in your browser.
 
 ## License
 
