@@ -169,26 +169,29 @@ def load_data(asreview_data_object):
     return data
 
 
-if __name__ == "__main__":
-    filepath =
-    SemanticClustering(ASReviewData.from_file(filepath))
-
-
 def main(argv):
-    filepath = ''
+    filepath = ""
 
     try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["filepath="])
+        opts, args = getopt.getopt(
+            argv, "htf:", ["help", "testfile", "filepath="])
     except getopt.GetoptError:
+        print('Please use the following format:')
         print('test.py -f <filepath>')
+        print('test.py --testfile')
         sys.exit(2)
     for opt, arg in opts:
-        if opt == '-f':
+        if opt in ("-h", "--help"):
+            print('test.py -f <filepath> or --testfile')
+            sys.exit()
+        elif opt in ("-f", "--filepath"):
             filepath = arg
         elif opt in ("-t", "--testfile"):
             filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
     print('Running from file: ', filepath)
 
+    SemanticClustering(ASReviewData.from_file(filepath))
+
 
 if __name__ == "__main__":
-    SemanticClustering(ASReviewData.from_file(sys.argv[1:]))
+    main(sys.argv[1:])
