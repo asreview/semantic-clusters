@@ -17,7 +17,8 @@ py asreviewcontrib\semantic_clustering\main.py --filepath <url or local file>
 ```
 
 The filepath argument starts the processing of a file for clustering. This file
-will be saved to `\data` after the processing is done. An example of usage can be:
+will be saved to the `data` folder after the processing is done. An example of
+usage can be:
 
 ```bash
 py asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
