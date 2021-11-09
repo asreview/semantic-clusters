@@ -114,7 +114,7 @@ def create_file(data, coords, labels):
 # Optimal n clusters, very inefficient, to be corrected in a future PR
 def calc_optimal_n_clusters(features):
 
-    Sum_of_squared_distances = []
+    sum_of_squared_distances = []
 
     K = range(1, 25)
     for k in K:
