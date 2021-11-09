@@ -92,7 +92,7 @@ def SemanticClustering(asreview_data_object):
     visualize_clusters(tsne_data, labels)
 
 
-# Optimal n clusters, very inefficient, to be done over later
+# Optimal n clusters, very inefficient, to be corrected in a future PR
 def calc_optimal_n_clusters(features):
 
     Sum_of_squared_distances = []
