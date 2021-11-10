@@ -1,7 +1,7 @@
 # ASReview Semantic Clustering
 This repository contains the Semantic Clustering plugin for [ASReview](https://github.com/asreview/asreview). It applies
 multiple techniques (SciBert, PCA, T-SNE, KMeans, a custom Cluster Optimizer) to
-an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/reference.html?highlight=data%20object#asreview-data), in order to cluster records based on semantic
+an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/reference.html#asreview-data), in order to cluster records based on semantic
 differences. The end result is an interactive dashboard:
 
 ![Alt Text](/docs/cord19_semantic_clusters.gif)
