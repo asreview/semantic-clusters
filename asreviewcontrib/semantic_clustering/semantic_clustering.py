@@ -2,19 +2,30 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
-# imports
-from sklearn.cluster import KMeans
-from numpy.linalg import norm
+# Environment imports
 import os
 from tqdm import tqdm
+import numpy as np
+
+# Calculation imports
+from sklearn.cluster import KMeans
+from numpy.linalg import norm
+
+# Transformer imports
+from transformers import AutoTokenizer, AutoModel
+from transformers import logging
+
+# Visualization imports
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Local imports
 from dim_reduct import run_pca
 from dim_reduct import t_sne
 from clustering import run_KMeans
-import numpy as np
-from transformers import AutoTokenizer, AutoModel
-from transformers import logging
-import matplotlib.pyplot as plt
-import seaborn as sns
+from asreview.data import ASReviewData
+
+# Setting environment
 logging.set_verbosity_error()
 sns.set()
 tqdm.pandas()
@@ -31,8 +42,9 @@ def SemanticClustering(asreview_data_object):
     print("Loading data...")
     data = _load_data(asreview_data_object)
 
-    # cut data for testing
-    data = data.iloc[:1000, :]
+    # since processing the data can take a long time, for now the data is cut
+    # down to decrease test duration. This will be removed in future versions
+    # data = data.iloc[:30, :]
 
     # load scibert transformer
     print("Loading scibert transformer...")
@@ -76,7 +88,8 @@ def SemanticClustering(asreview_data_object):
     n_clusters = _calc_optimal_n_clusters(tsne)
     print("Optimal number of clusters: ", n_clusters)
 
-    # run k-means
+    # run k-means. n_init is set to 10, this indicated the amount of restarts
+    # for the KMeans algorithm. 10 is the sklearn default.
     print("Running k-means...")
     labels = run_KMeans(tsne, n_clusters, 10)
 
@@ -101,7 +114,9 @@ def _create_file(data, coords, labels):
     data.to_csv(kmeans_df_path, index=None)
 
 
-# Optimal n clusters, very inefficient, to be corrected in a future PR
+# Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
+# clusters, and picks the optimal inertia based on an elbow graph and some cool
+# trigonometry.
 def _calc_optimal_n_clusters(features):
 
     sum_of_squared_distances = []
