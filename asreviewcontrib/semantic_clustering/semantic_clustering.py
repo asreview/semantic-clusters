@@ -37,7 +37,8 @@ def SemanticClustering(asreview_data_object):
     print("Loading data...")
     data = load_data(asreview_data_object)
 
-    # cut data for testing
+    # since processing the data can take a long time, for now the data is cut
+    # down to decrease test duration. This will be removed in future versions
     data = data.iloc[:30, :]
 
     # load scibert transformer
@@ -82,7 +83,8 @@ def SemanticClustering(asreview_data_object):
     n_clusters = calc_optimal_n_clusters(tsne)
     print("Optimal number of clusters: ", n_clusters)
 
-    # run k-means
+    # run k-means. n_init is set to 10, this indicated the amount of restarts
+    # for the KMeans algorithm. 10 is the sklearn default.
     print("Running k-means...")
     labels = run_KMeans(tsne, n_clusters, 10)
 
@@ -92,7 +94,9 @@ def SemanticClustering(asreview_data_object):
     visualize_clusters(tsne_data, labels)
 
 
-# Optimal n clusters, very inefficient, to be corrected in a future PR
+# Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
+# clusters, and picks the optimal inertia based on an elbow graph and some cool
+# trigonometry.
 def calc_optimal_n_clusters(features):
 
     Sum_of_squared_distances = []
