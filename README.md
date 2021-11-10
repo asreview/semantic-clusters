@@ -54,5 +54,5 @@ MIT license
 
 ## Contact
 Got ideas for improvement? For any questions or remarks, please send an email to
-[asreview@uu.nl].
+[asreview@uu.nl](mailto:asreview@uu.nl).
 
