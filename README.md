@@ -12,8 +12,8 @@ following commands can be run:
 
 ### Processing
 ```console
-py asreviewcontrib\semantic_clustering\main.py -f <url or local file>
-py asreviewcontrib\semantic_clustering\main.py --filepath <url or local file>
+python asreviewcontrib\semantic_clustering\main.py -f <url or local file>
+python asreviewcontrib\semantic_clustering\main.py --filepath <url or local file>
 ```
 
 The filepath argument starts the processing of a file for clustering. This file
@@ -21,13 +21,13 @@ will be saved to the `data` folder after the processing is done. An example of
 usage can be:
 
 ```console
-py asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
+python asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
 ```
 
 ### Processing testfile
 ```console
-py asreviewcontrib\semantic_clustering\main.py -t
-py asreviewcontrib\semantic_clustering\main.py --testfile
+python asreviewcontrib\semantic_clustering\main.py -t
+python asreviewcontrib\semantic_clustering\main.py --testfile
 ```
 
 This argument will start the processing file using the [`van_de_Schoot_2017`
@@ -35,8 +35,8 @@ dataset](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight
 
 ### Interactive app
 ```console
-py asreviewcontrib\semantic_clustering\main.py -a
-py asreviewcontrib\semantic_clustering\main.py --app
+python asreviewcontrib\semantic_clustering\main.py -a
+python asreviewcontrib\semantic_clustering\main.py --app
 ```
 
 After the processing has finished with either a new file or the test file, a
