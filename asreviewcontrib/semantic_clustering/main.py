@@ -8,7 +8,7 @@ import getopt
 from asreview.data import ASReviewData
 from asreview.entry_points import BaseEntryPoint
 from asreviewcontrib.semantic_clustering.interactive import run_app
-from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering # noqa: E501
+from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering  # noqa: E501
 
 
 def main(argv):
