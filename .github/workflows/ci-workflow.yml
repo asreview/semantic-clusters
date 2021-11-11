@@ -15,7 +15,7 @@ jobs:
         pip install flake8
     - name: Lint python with flake8
       run: |
-        flake8 . --max-complexity=10 --statistics
+        flake8 . --max-complexity=10 --statistics --exclude = clustering.py, dim_reduct.py
 
   test-master:
     name: test-asreview-latest
