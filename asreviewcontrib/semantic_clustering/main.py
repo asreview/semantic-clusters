@@ -50,13 +50,14 @@ def main(argv):
 
     SemanticClustering(ASReviewData.from_file(filepath))
 
-def SemClusEntryPoint(BaseEntryPoint):
+class SemClusEntryPoint(BaseEntryPoint):
     description = "Semantic clustering tools for ASReview."
     extension_name = "asreview-semantic-clustering"
-    version = "0.1"
+
 
     def __init__(self, args):
-        super(SemClusEntryPoint, self).__init__()
+        super().__init__()
+        self.version = "0.1"
 
     def execute(self, argv):
         main(argv)
