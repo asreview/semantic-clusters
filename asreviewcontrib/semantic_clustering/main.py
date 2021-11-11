@@ -6,10 +6,10 @@
 import sys
 import getopt
 
-# Local Imports
-from semantic_clustering import SemanticClustering
-from interactive import run_app
 from asreview.data import ASReviewData
+
+from asreviewcontrib.semantic_clustering.interactive import run_app
+from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering
 
 
 def main(argv):
