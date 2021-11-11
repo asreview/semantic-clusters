@@ -6,10 +6,13 @@
 import sys
 import getopt
 
-# Local Imports
+# Local imports
 from semantic_clustering import SemanticClustering
 from interactive import run_app
+
+# ASReview imports
 from asreview.data import ASReviewData
+from asreview.entry_points import BaseEntryPoint
 
 
 def main(argv):
@@ -47,6 +50,13 @@ def main(argv):
 
     SemanticClustering(ASReviewData.from_file(filepath))
 
+def SemClusEntryPoint(BaseEntryPoint):
+    description = "Semantic clustering tools for ASReview."
+    extension_name = "asreview-semantic-clustering"
+    version = "0.1"
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
+    def __init__(self, args):
+        super(SemClusEntryPoint, self).__init__()
+
+    def execute(self, argv):
+        main(argv)
