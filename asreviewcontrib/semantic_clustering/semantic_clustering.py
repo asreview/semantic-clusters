@@ -135,7 +135,7 @@ def _calc_optimal_n_clusters(features):
             (sum_of_squared_distances[-1], (len(sum_of_squared_distances) + 1)))
         p3 = np.asarray((sum_of_squared_distances[i - 1], i))
 
-        m = np.cross(p2 - p1, p3 - p1)/norm(p2 - p1)
+        m = np.cross(p2 - p1, p3 - p1) / norm(p2 - p1)
 
         if m > max:
             max = m

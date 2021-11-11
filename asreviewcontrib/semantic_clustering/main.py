@@ -34,7 +34,7 @@ def main(argv):
         elif opt in ("-f", "--filepath"):
             filepath = arg
         elif opt in ("-t", "--testfile"):
-            filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" #noqa: E501
+            filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"  # noqa: E501
         elif opt in ("-a", "--app"):
             run_app()
             sys.exit(1)
