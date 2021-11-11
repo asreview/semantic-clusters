@@ -11,6 +11,11 @@ import numpy as np
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
 
+# Calculation imports
+from sklearn.cluster import KMeans
+from numpy.linalg import norm
+import numpy as np
+
 # Transformer imports
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
@@ -100,7 +105,6 @@ def SemanticClustering(asreview_data_object):
     # create file for use in interactive dashboard
     _create_file(data, tsne, labels)
 
-
 # Create functional dataframe and store to file for use in interactive
 def _create_file(data, coords, labels):
     data['x'] = coords[:, 0]
@@ -143,7 +147,6 @@ def _calc_optimal_n_clusters(features):
             clusters = i
 
     return clusters
-
 
 def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
