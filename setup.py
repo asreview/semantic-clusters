@@ -37,7 +37,14 @@ setup(
     keywords='asreview extension semantic clustering clusters visualization',
     packages=find_namespace_packages(include=['asreviewcontrib.*']),
     install_requires=[
-        "numpy", "matplotlib", "asreview", "dash", "plotly", "sklearn", "transformers", "numpy"
+        "numpy",
+        "matplotlib",
+        "asreview",
+        "dash",
+        "plotly",
+        "sklearn",
+        "transformers",
+        "numpy"
     ],
 
     extras_require={
@@ -45,7 +52,7 @@ setup(
 
     entry_points={
         "asreview.entry_points": [
-            "semantic-clustering = asreviewcontrib.semantic_clustering.main:SemClusEntryPoint",
+            "semantic-clustering = asreviewcontrib.semantic_clustering.main:SemClusEntryPoint", #noqa: E501
         ]
     },
 
