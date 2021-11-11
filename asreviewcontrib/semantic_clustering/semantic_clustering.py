@@ -2,33 +2,20 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
-# Environment imports
 import os
 from tqdm import tqdm
 import numpy as np
-
-# Calculation imports
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
 
-# Calculation imports
-from sklearn.cluster import KMeans
-from numpy.linalg import norm
-import numpy as np
-
-# Transformer imports
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
-
-# Visualization imports
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Local imports
 from dim_reduct import run_pca
 from dim_reduct import t_sne
 from clustering import run_KMeans
-from asreview.data import ASReviewData
 
 # Setting environment
 logging.set_verbosity_error()
