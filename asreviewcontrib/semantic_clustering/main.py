@@ -7,8 +7,8 @@ import sys
 import getopt
 
 # Local imports
-from semantic_clustering import SemanticClustering
-from interactive import run_app
+from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering
+from asreviewcontrib.semantic_clustering.interactive import run_app
 
 # ASReview imports
 from asreview.data import ASReviewData
