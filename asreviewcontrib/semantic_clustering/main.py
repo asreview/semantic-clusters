@@ -2,17 +2,13 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\main.py
 
-# Environment imports
 import sys
 import getopt
 
-# Local imports
-from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering
-from asreviewcontrib.semantic_clustering.interactive import run_app
-
-# ASReview imports
 from asreview.data import ASReviewData
 from asreview.entry_points import BaseEntryPoint
+from asreviewcontrib.semantic_clustering.interactive import run_app
+from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering
 
 
 def main(argv):
