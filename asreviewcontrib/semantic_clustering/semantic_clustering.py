@@ -5,9 +5,9 @@
 import os
 from tqdm import tqdm
 import numpy as np
+
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
-
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
