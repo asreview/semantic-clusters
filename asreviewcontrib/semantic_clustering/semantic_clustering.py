@@ -1,39 +1,22 @@
-# Copyright 2021 The ASReview Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
 # Environment imports
 import os
 from tqdm import tqdm
-
-# Calculation imports
+import numpy as np
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
-import numpy as np
 
-# Transformer imports
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
-
-# Visualization imports
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Local imports
 from dim_reduct import run_pca
 from dim_reduct import t_sne
 from clustering import run_KMeans
-from asreview.data import ASReviewData
 
 # Setting environment
 logging.set_verbosity_error()
@@ -43,13 +26,18 @@ tqdm.pandas()
 
 def SemanticClustering(asreview_data_object):
 
+    # if data folder exists, delete it
+    if os.path.exists("data"):
+        print("data folder exists, deleting...")
+        os.system("del /F /Q data")
+
     # load data
     print("Loading data...")
-    data = load_data(asreview_data_object)
+    data = _load_data(asreview_data_object)
 
     # since processing the data can take a long time, for now the data is cut
     # down to decrease test duration. This will be removed in future versions
-    data = data.iloc[:30, :]
+    # data = data.iloc[:30, :]
 
     # load scibert transformer
     print("Loading scibert transformer...")
@@ -90,7 +78,7 @@ def SemanticClustering(asreview_data_object):
 
     # calculate optimal number of clusters
     print("Calculating optimal number of clusters...")
-    n_clusters = calc_optimal_n_clusters(tsne)
+    n_clusters = _calc_optimal_n_clusters(tsne)
     print("Optimal number of clusters: ", n_clusters)
 
     # run k-means. n_init is set to 10, this indicated the amount of restarts
@@ -100,31 +88,45 @@ def SemanticClustering(asreview_data_object):
 
     # visualize clusters
     print("Visualizing clusters...")
-    tsne_data = [tsne[:, 0], tsne[:, 1]]
-    visualize_clusters(tsne_data, labels)
+    _visualize_clusters(tsne, labels)
+
+    # create file for use in interactive dashboard
+    _create_file(data, tsne, labels)
+
+# Create functional dataframe and store to file for use in interactive
+def _create_file(data, coords, labels):
+    data['x'] = coords[:, 0]
+    data['y'] = coords[:, 1]
+    data['cluster_id'] = labels
+
+    if not os.path.exists("data"):
+        os.makedirs("data")
+
+    kmeans_df_path = os.path.join("data", "kmeans_df.csv")
+    data.to_csv(kmeans_df_path, index=None)
 
 
 # Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
 # clusters, and picks the optimal inertia based on an elbow graph and some cool
 # trigonometry.
-def calc_optimal_n_clusters(features):
+def _calc_optimal_n_clusters(features):
 
-    Sum_of_squared_distances = []
+    sum_of_squared_distances = []
 
     K = range(1, 25)
     for k in K:
         km = KMeans(n_clusters=k)
         km = km.fit(features)
-        Sum_of_squared_distances.append(km.inertia_)
+        sum_of_squared_distances.append(km.inertia_)
 
     max = 0
     clusters = 1
 
     for i in K:
-        p1 = np.asarray((Sum_of_squared_distances[0], 1))
+        p1 = np.asarray((sum_of_squared_distances[0], 1))
         p2 = np.asarray(
-            (Sum_of_squared_distances[-1], (len(Sum_of_squared_distances)+1)))
-        p3 = np.asarray((Sum_of_squared_distances[i-1], i))
+            (sum_of_squared_distances[-1], (len(sum_of_squared_distances)+1)))
+        p3 = np.asarray((sum_of_squared_distances[i-1], i))
 
         m = np.cross(p2-p1, p3-p1)/norm(p2-p1)
 
@@ -134,15 +136,14 @@ def calc_optimal_n_clusters(features):
 
     return clusters
 
-
-def visualize_clusters(data, labels):
+def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
     ax.set_title("semantic clustering")
     ax.set_xlabel("t-SNE Component 1")
     ax.set_ylabel("t-SNE Component 2")
 
-    x = data[0]
-    y = data[1]
+    x = tsne[:, 0]
+    y = tsne[:, 1]
 
     # Do actual plotting and save image
     ax.scatter(x, y, c=labels, cmap="Set3")
@@ -153,7 +154,7 @@ def visualize_clusters(data, labels):
     fig.savefig(img_path)
 
 
-def load_data(asreview_data_object):
+def _load_data(asreview_data_object):
 
     # extract title and abstract, drop empty abstracts and reset index
     data = asreview_data_object.df[['title', 'abstract']].copy()
@@ -162,8 +163,3 @@ def load_data(asreview_data_object):
     data = data.reset_index(drop=True)
 
     return data
-
-
-if __name__ == "__main__":
-    filepath = "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
-    SemanticClustering(ASReviewData.from_file(filepath))
