@@ -15,6 +15,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='asreview-semantic-clustering',
     description='Semantic clustering tool for the ASReview project',
+    version='0.1',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/asreview/semantic-clusters',
@@ -44,7 +45,9 @@ setup(
         "plotly",
         "sklearn",
         "transformers",
-        "numpy"
+        "numpy",
+        "seaborn",
+        "torch",
     ],
 
     extras_require={

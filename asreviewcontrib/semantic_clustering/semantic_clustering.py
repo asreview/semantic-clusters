@@ -13,9 +13,9 @@ from transformers import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from dim_reduct import run_pca
-from dim_reduct import t_sne
-from clustering import run_KMeans
+from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
+from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
+from asreviewcontrib.semantic_clustering.clustering import run_KMeans
 
 # Setting environment
 logging.set_verbosity_error()

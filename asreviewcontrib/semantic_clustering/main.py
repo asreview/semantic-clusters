@@ -14,13 +14,12 @@ class SemClusEntryPoint(BaseEntryPoint):
     description = "Semantic clustering tools for ASReview."
     extension_name = "asreview-semantic-clustering"
 
-    def __init__(self, args):
-        super().__init__()
+    def __init__(self):
         self.version = "0.1"
 
     def execute(self, argv):
         args = _parse_arguments(
-            version=f"{self.extension_name}: {self.version}")
+            version=f"{self.extension_name}: {self.version}", argv=argv)
 
         if args.filepath:
             data = ASReviewData.from_file(args.filepath)
@@ -35,27 +34,27 @@ class SemClusEntryPoint(BaseEntryPoint):
 
 
 # argument parser
-def _parse_arguments(version="Unknown"):
+def _parse_arguments(version="Unknown", argv=None):
     parser = argparse.ArgumentParser(prog='asreview semantic clustering')
     group = parser.add_mutually_exclusive_group()
 
     group.add_argument(
         "-f",
         "--filepath",
-        help="Path to the file to be processed.",
+        help="path to the file to be processed",
         type=str,
         default="",
     )
     group.add_argument(
         "-t",
         "--testfile",
-        help="Use the test file instead of providing a file.",
+        help="use a test file instead of providing a file",
         action="store_true",
     )
     group.add_argument(
         "-a",
         "--app",
-        help="Run the app.",
+        help="run the app",
         action="store_true",
     )
     group.add_argument(
@@ -64,4 +63,4 @@ def _parse_arguments(version="Unknown"):
         action="version",
         version="%(prog)s " + version,
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
