@@ -4,6 +4,7 @@
 
 import argparse
 import sys
+import os
 
 import webbrowser
 
@@ -25,7 +26,7 @@ class SemClusEntryPoint(BaseEntryPoint):
             version=f"{self.extension_name}: {self.version}", argv=argv)
 
         if args.filepath:
-            data = ASReviewData.from_file(args.filepath)
+            data = ASReviewData.from_file(args.filepath.name)
             SemanticClustering(data)
 
         elif args.testfile:
@@ -33,12 +34,19 @@ class SemClusEntryPoint(BaseEntryPoint):
             SemanticClustering(data)
 
         elif args.app:
+            _valid_file(args.app.name)
             url = "http://127.0.0.1:8050/"
-
             webbrowser.open(url, new=2, autoraise=True)
-
-            run_app()
+            run_app(args.app)
         sys.exit(1)
+
+
+# check file extension
+def _valid_file(param):
+    base, ext = os.path.splitext(param)
+    if ext.lower() not in ('.csv'):
+        raise argparse.ArgumentTypeError('File must have a csv extension')
+    return param
 
 
 # argument parser
@@ -49,21 +57,22 @@ def _parse_arguments(version="Unknown", argv=None):
     group.add_argument(
         "-f",
         "--filepath",
-        help="path to the file to be processed",
-        type=str,
-        default="",
+        help="processes the specified file",
+        type=argparse.FileType('r', encoding='UTF-8')
     )
     group.add_argument(
         "-t",
         "--testfile",
-        help="use a test file instead of providing a file",
+        help="uses a test file instead of providing a file",
         action="store_true",
     )
     group.add_argument(
         "-a",
         "--app",
-        help="run the app",
-        action="store_true",
+        metavar="FILEPATH",
+        help="runs the app from a file created with the semantic clustering "
+        "extension",
+        type=argparse.FileType('r', encoding='UTF-8')
     )
     group.add_argument(
         "-v",

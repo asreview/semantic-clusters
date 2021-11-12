@@ -1,27 +1,21 @@
-# Imports
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Path: asreviewcontrib\semantic_clustering\interactive.py
 
-# System / os stuff
-import os
-
-# Data
 import pandas as pd
 
-# Dash-y
 import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input
-
-# Plotly
 import plotly.express as px
 
 
-def run_app():
+def run_app(filepath):
     """Function to be called to run the full Dash App"""
 
     # Load DataFrame with clusters
-    df_path = os.path.join("data", "kmeans_df.csv")
-    df = pd.read_csv(df_path)
+    df = pd.read_csv(filepath)
 
     # Read as STR for discrete colormap
     df['cluster_id'] = df['cluster_id'].astype(str)
