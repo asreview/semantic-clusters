@@ -3,6 +3,9 @@
 # Path: asreviewcontrib\semantic_clustering\main.py
 
 import argparse
+import sys
+
+import webbrowser
 
 from asreview.data import ASReviewData
 from asreview.entry_points import BaseEntryPoint
@@ -25,12 +28,17 @@ class SemClusEntryPoint(BaseEntryPoint):
             data = ASReviewData.from_file(args.filepath)
             SemanticClustering(data)
 
-        if args.testfile:
+        elif args.testfile:
             data = ASReviewData.from_file("https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv")  # noqa: E501
             SemanticClustering(data)
 
-        if args.app:
+        elif args.app:
+            url = "http://127.0.0.1:8050/"
+
+            webbrowser.open(url, new=2, autoraise=True)
+
             run_app()
+        sys.exit(1)
 
 
 # argument parser
@@ -63,4 +71,10 @@ def _parse_arguments(version="Unknown", argv=None):
         action="version",
         version="%(prog)s " + version,
     )
+
+    # Exit if no arguments are given
+    if len(argv) == 0:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
     return parser.parse_args(argv)
