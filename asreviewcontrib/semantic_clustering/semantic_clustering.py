@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
-# Environment imports
 import os
 from tqdm import tqdm
 import numpy as np

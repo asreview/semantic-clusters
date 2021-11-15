@@ -87,18 +87,14 @@ def run_app():
 
         # Update graph with hoverData
         if hoverData is not None:
-            hover_dict = hoverData['points'][0]
-            abstract_idx = hover_dict['pointIndex']
+            # Get abstract based on x and y values
+            x = hoverData['points'][0]['x']
+            y = hoverData['points'][0]['y']
+            return df[(df['x'] == x) & (df['y'] == y)
+                      ]['abstract'].values[0]
 
-            # Set variable for abstract window update
-            abstract = df['abstract'].iloc[abstract_idx]
-
-            # Set hoverData to None again to prevent issues with graph update
-            hoverData = None
         else:
-            abstract = df['abstract'].iloc[0]
-
-        return abstract
+            return df['abstract'].iloc[0]
 
     # Callback to refresh article title
     @app.callback(dash.dependencies.Output("paper-title", "children"),
@@ -110,14 +106,13 @@ def run_app():
 
         # Update graph with hoverData
         if hoverData is not None:
-            hover_dict = hoverData['points'][0]
-            title_idx = hover_dict['pointIndex']
+            # Get title based on x and y values
+            x = hoverData['points'][0]['x']
+            y = hoverData['points'][0]['y']
+            title = df[(df['x'] == x) & (df['y'] == y)
+                       ]['title'].values[0]
+            return title
 
-            # Set variable for paper title update
-            title = df['title'].iloc[title_idx]
-
-            # Set hoverData to None again to prevent issues with graph update
-            hoverData = None
         else:
             title = df['title'].iloc[0]
 
