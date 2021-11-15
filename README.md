@@ -11,15 +11,14 @@ interactive dashboard:
 
 ## Getting started
 
-The packaged is called `asreview-semantic-clustering` and can be installed with:
+The packaged is called `asreview-semantic-clustering` and can be installed from the download folder with:
 
-```console
+```shell
 pip install .
 ```
-from the download folder,
-or run the following to install directly:
+or from the command line directly with:
 
-```console
+```shell
 python -m pip install git+https://github.com/asreview/semantic-clusters.git
 ```
 
@@ -27,29 +26,29 @@ python -m pip install git+https://github.com/asreview/semantic-clusters.git
 
 For help use:
 
-```console
+```shell
 asreview semantic-clustering -h
 asreview semantic-clustering --help
 ```
 
 Other options are:
 
-```console
+```shell
 asreview semantic-clustering -f <input.csv or url> -o <output.csv>
 asreview semantic-clustering --filepath <input.csv or url> --output <output.csv>
 ```
 
-```console
+```shell
 asreview semantic-clustering -t -o <output.csv>
 asreview semantic-clustering --testfile --output <output.csv>
 ```
 
-```console
+```shell
 asreview semantic-clustering -a <output.csv>
 asreview semantic-clustering --app <output.csv>
 ```
 
-```console
+```shell
 asreview semantic-clustering -v
 asreview semantic-clustering --version
 ```
@@ -62,26 +61,28 @@ following commands can be run:
 ### Processing
 In the processing phase, a dataset is processed and clustered for use in the interactive interface. The following options are available:
 
-```console
+```shell
 asreview semantic-clustering -f <input.csv or url> -o <output_file.csv>
 asreview semantic-clustering -t -o <output_file.csv>
 ```
 
-`-f` will process a file and store the results in the file specified in `-o`. Semantic-clustering uses an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData), and can handle either a file or url:
+Using `-f` will process a file and store the results in the file specified in `-o`. 
 
-```console
+Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets) dataset instead. 
+
+Semantic-clustering uses an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData), and can handle either a file or url:
+
+```shell
 asreview semantic-clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
 asreview semantic-clustering -f van_de_Schoot_2017.csv -o output.csv
 ```
 
-Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets) dataset instead. 
-
-If an output file is not specified, `output.csv` is used.
+If an output file is not specified, `output.csv` is used as output file name.
 
 ### Dashboard
 Running the dashboard server is also done from the command line. This command will start a [Dash](https://plotly.com/dash/) server in the console and visualize the processed file.
 
-```console
+```shell
 asreview semantic-clustering -a output.csv
 asreview semantic-clustering --app output.csv
 ```
