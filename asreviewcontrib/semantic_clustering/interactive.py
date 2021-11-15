@@ -27,7 +27,7 @@ def run_app(filepath):
     fig.update_layout(xaxis=dict(showticklabels=False, title=""),
                       yaxis=dict(showticklabels=False, ticks="", title=""))
     config = dict(
-        {'scrollZoom': True, 'displayModeBar': False, 'displaylogo': False})
+        {'scrollZoom': True, 'displayModeBar': False, 'displaylogo': False, 'clear_on_unhover': True})
 
     # Initialize app and do lay-out
     app = dash.Dash()
