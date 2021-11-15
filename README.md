@@ -8,44 +8,85 @@ interactive dashboard:
 
 ![Alt Text](/docs/cord19_semantic_clusters.gif)
 
+
+## Getting started
+
+The packaged is called `asreview-semantic-clustering` and can be installed with:
+
+```console
+pip install .
+```
+from the download folder,
+or run the following to install directly:
+
+```console
+python -m pip install git+https://github.com/asreview/semantic-clusters.git
+```
+
+### Commands
+
+For help use:
+
+```console
+asreview semantic-clustering -h
+asreview semantic-clustering --help
+```
+
+Other options are:
+
+```console
+asreview semantic-clustering -f <input.csv or url> -o <output.csv>
+asreview semantic-clustering --filepath <input.csv or url> --output <output.csv>
+```
+
+```console
+asreview semantic-clustering -t -o <output.csv>
+asreview semantic-clustering --testfile --output <output.csv>
+```
+
+```console
+asreview semantic-clustering -a <output.csv>
+asreview semantic-clustering --app <output.csv>
+```
+
+```console
+asreview semantic-clustering -v
+asreview semantic-clustering --version
+```
+
+
 ## Usage
-The usage of the semantic clustering app is found in the main.py file. The
+The functionality of the semantic clustering extension is implemented in a [subcommand extension](https://asreview.readthedocs.io/en/latest/API/extension_dev.html#subcommand-extensions). The
 following commands can be run:
 
 ### Processing
-```console
-python asreviewcontrib\semantic_clustering\main.py -f <url or local file>
-python asreviewcontrib\semantic_clustering\main.py --filepath <url or local file>
-```
-
-The filepath argument starts the processing of a file for clustering. This file
-will be saved to the `data` folder after the processing is done. An example of
-usage can be:
+In the processing phase, a dataset is processed and clustered for use in the interactive interface. The following options are available:
 
 ```console
-python asreviewcontrib\semantic_clustering\main.py -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv"
+asreview semantic-clustering -f <input.csv or url> -o <output_file.csv>
+asreview semantic-clustering -t -o <output_file.csv>
 ```
 
-### Processing testfile
+`-f` will process a file and store the results in the file specified in `-o`. Semantic-clustering uses an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData), and can handle either a file or url:
+
 ```console
-python asreviewcontrib\semantic_clustering\main.py -t
-python asreviewcontrib\semantic_clustering\main.py --testfile
+asreview semantic-clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
+asreview semantic-clustering -f van_de_Schoot_2017.csv -o output.csv
 ```
 
-This argument will start the processing file using the [`van_de_Schoot_2017`
-dataset](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets),
-and can be used as a functionality test.
+Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets) dataset instead. 
 
-### Interactive app
+If an output file is not specified, `output.csv` is used.
+
+### Dashboard
+Running the dashboard server is also done from the command line. This command will start a Dashy server in the console and visualize the processed file.
+
 ```console
-python asreviewcontrib\semantic_clustering\main.py -a
-python asreviewcontrib\semantic_clustering\main.py --app
+asreview semantic-clustering -a output.csv
+asreview semantic-clustering --app output.csv
 ```
 
-After the processing has finished with either a new file or the test file, a
-file called `kmeans_df.csv` has appeared in the data folder. This file can be
-used in the interactive app. When the server has been started with the command
-above, it can be found at [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
+When the server has been started with the command above, it can be found at [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
 your browser.
 
 ## License
