@@ -79,7 +79,7 @@ Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.read
 If an output file is not specified, `output.csv` is used.
 
 ### Dashboard
-Running the dashboard server is also done from the command line. This command will start a Dashy server in the console and visualize the processed file.
+Running the dashboard server is also done from the command line. This command will start a [Dash](https://plotly.com/dash/) server in the console and visualize the processed file.
 
 ```console
 asreview semantic-clustering -a output.csv
