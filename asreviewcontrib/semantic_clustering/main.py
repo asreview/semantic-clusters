@@ -27,14 +27,13 @@ class SemClusEntryPoint(BaseEntryPoint):
 
         if args.filepath:
             data = ASReviewData.from_file(args.filepath.name)
-            SemanticClustering(data)
+            SemanticClustering(data, args.output)
 
         elif args.testfile:
             data = ASReviewData.from_file("https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv")  # noqa: E501
-            SemanticClustering(data)
+            SemanticClustering(data, args.output)
 
         elif args.app:
-            _valid_file(args.app.name)
             url = "http://127.0.0.1:8050/"
             webbrowser.open(url, new=2, autoraise=True)
             run_app(args.app)
@@ -57,6 +56,7 @@ def _parse_arguments(version="Unknown", argv=None):
     group.add_argument(
         "-f",
         "--filepath",
+        metavar="INPUT FILEPATH",
         help="processes the specified file",
         type=argparse.FileType('r', encoding='UTF-8')
     )
@@ -69,16 +69,26 @@ def _parse_arguments(version="Unknown", argv=None):
     group.add_argument(
         "-a",
         "--app",
-        metavar="FILEPATH",
+        metavar="INPUT FILEPATH",
         help="runs the app from a file created with the semantic clustering "
         "extension",
         type=argparse.FileType('r', encoding='UTF-8')
     )
-    group.add_argument(
+
+    parser.add_argument(
         "-v",
         "--version",
         action="version",
         version="%(prog)s " + version,
+    )
+
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="output file name",
+        metavar="OUTPUT FILE NAME",
+        type=str,
+        default="output.csv"
     )
 
     # Exit if no arguments are given
@@ -86,4 +96,12 @@ def _parse_arguments(version="Unknown", argv=None):
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+
+    if args.app is not None:
+        _valid_file(args.app.name)
+
+    if args.output is not None:
+        _valid_file(args.output)
+
+    return args

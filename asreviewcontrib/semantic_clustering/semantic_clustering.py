@@ -23,7 +23,7 @@ sns.set()
 tqdm.pandas()
 
 
-def SemanticClustering(asreview_data_object):
+def SemanticClustering(asreview_data_object, output_file):
 
     # load data
     print("Loading data...")
@@ -85,20 +85,17 @@ def SemanticClustering(asreview_data_object):
     _visualize_clusters(tsne, labels)
 
     # create file for use in interactive dashboard
-    _create_file(data, tsne, labels)
+    print("Creating file {0}...".format(output_file))
+    _create_file(data, tsne, labels, output_file)
 
 
 # Create functional dataframe and store to file for use in interactive
-def _create_file(data, coords, labels):
+def _create_file(data, coords, labels, output_file):
     data['x'] = coords[:, 0]
     data['y'] = coords[:, 1]
     data['cluster_id'] = labels
 
-    if not os.path.exists("data"):
-        os.makedirs("data")
-
-    kmeans_df_path = os.path.join("data", "kmeans_df.csv")
-    data.to_csv(kmeans_df_path, index=None)
+    data.to_csv(output_file, index=None)
 
 
 # Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
