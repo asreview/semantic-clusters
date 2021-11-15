@@ -8,6 +8,7 @@ import numpy as np
 
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
+
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
@@ -16,6 +17,7 @@ import seaborn as sns
 from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
 from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
 from asreviewcontrib.semantic_clustering.clustering import run_KMeans
+
 
 # Setting environment
 logging.set_verbosity_error()
@@ -127,7 +129,7 @@ def _calc_optimal_n_clusters(features):
 
     return clusters
 
-
+  
 def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
     ax.set_title("semantic clustering")
