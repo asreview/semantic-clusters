@@ -1,0 +1,33 @@
+{
+	"description": "",
+	"title": "",
+	"creators": [{
+			"name": "",
+			"affiliation": "",
+			"orcid": ""
+		}
+	],
+	"contributors": [
+		{
+			"name": "",
+			"affiliation": "",
+			"orcid": "",
+			"type": "" 
+		}
+	],
+	"keywords": [
+		"ASReview",
+		"",
+		"",
+		"",
+		""
+	],
+	"related_identifiers": [
+		{
+			"relation": "isSupplementTo",
+		 	"identifier": "https://doi.org/10.5281/zenodo.3345592"
+		}
+	],
+	"license": "MIT",
+	"upload_type": "software"
+}
