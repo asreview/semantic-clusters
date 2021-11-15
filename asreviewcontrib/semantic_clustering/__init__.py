@@ -1,2 +1,0 @@
-from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering
-from asreviewcontrib.semantic_clustering.interactive import run_app
