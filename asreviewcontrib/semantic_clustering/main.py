@@ -26,7 +26,7 @@ class SemClusEntryPoint(BaseEntryPoint):
             version=f"{self.extension_name}: {self.version}", argv=argv)
 
         if args.filepath:
-            data = ASReviewData.from_file(args.filepath.name)
+            data = ASReviewData.from_file(args.filepath)
             SemanticClustering(
                 data,
                 args.output,
@@ -64,7 +64,7 @@ def _parse_arguments(version="Unknown", argv=None):
         "--filepath",
         metavar="INPUT FILEPATH",
         help="processes the specified file",
-        type=argparse.FileType('r', encoding='UTF-8')
+        type=str,
     )
     group.add_argument(
         "-t",
