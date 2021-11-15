@@ -37,7 +37,7 @@ def SemanticClustering(
     # data = data.iloc[:30, :]
 
     # load transformer and tokenizer
-    print("Loading tokenizer and model...")
+    print("Loading tokenizer and model {0}...".format(transformer))
     tokenizer = AutoTokenizer.from_pretrained(transformer)
     model = AutoModel.from_pretrained(transformer)
 
