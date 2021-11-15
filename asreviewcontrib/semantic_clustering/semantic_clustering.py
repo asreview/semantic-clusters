@@ -23,7 +23,10 @@ sns.set()
 tqdm.pandas()
 
 
-def SemanticClustering(asreview_data_object, output_file):
+def SemanticClustering(
+        asreview_data_object,
+        output_file,
+        transformer='allenai/scibert_scivocab_uncased'):
 
     # load data
     print("Loading data...")
@@ -32,10 +35,6 @@ def SemanticClustering(asreview_data_object, output_file):
     # since processing the data can take a long time, for now the data is cut
     # down to decrease test duration. This will be removed in future versions
     # data = data.iloc[:30, :]
-
-    # load scibert transformer
-    print("Loading scibert transformer...")
-    transformer = 'allenai/scibert_scivocab_uncased'
 
     # load transformer and tokenizer
     print("Loading tokenizer and model...")
