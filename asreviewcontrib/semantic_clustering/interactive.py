@@ -120,4 +120,3 @@ def run_app():
 
     # Run the application
     app.run_server(debug=False)
-

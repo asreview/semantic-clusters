@@ -8,7 +8,6 @@ import numpy as np
 
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
-
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
@@ -17,7 +16,6 @@ import seaborn as sns
 from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
 from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
 from asreviewcontrib.semantic_clustering.clustering import run_KMeans
-
 
 # Setting environment
 logging.set_verbosity_error()
@@ -106,7 +104,7 @@ def _create_file(data, coords, labels):
 
     kmeans_df_path = os.path.join("data", "kmeans_df.csv")
     data.to_csv(kmeans_df_path, index=None)
-    
+
 
 # Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
 # clusters, and picks the optimal inertia based on an elbow graph and some cool
@@ -138,7 +136,7 @@ def _calc_optimal_n_clusters(features):
 
     return clusters
 
-  
+
 def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()
     ax.set_title("semantic clustering")
