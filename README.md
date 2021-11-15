@@ -99,8 +99,8 @@ dataset as input file. This way, the plugin can easily be tested.
 ### Transformer
 Semantic Clustering uses the
 [`allenai/scibert_scivocab_uncased`](https://github.com/allenai/scibert)
-transformer model as default setting. Using `--transformer <model>`, another
-model can be used:
+transformer model as default setting. Using the `--transformer <model>` option,
+another model can be selected for use instead:
 
 ```shell
 asreview semantic-clustering -t -o <output_file.csv> --transformer bert-base-uncased
