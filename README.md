@@ -87,7 +87,7 @@ asreview semantic-clustering -f van_de_Schoot_2017.csv -o output.csv
 
 If an output file is not specified, `output.csv` is used as output file name.
 
-### Test file.
+### Test file
 ```shell
 asreview semantic-clustering -t -o <output_file.csv>
 ```
