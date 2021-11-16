@@ -43,7 +43,7 @@ class SemClusEntryPoint(BaseEntryPoint):
 
 # argument parser
 def _parse_arguments(version="Unknown", argv=None):
-    parser = argparse.ArgumentParser(prog='asreview semantic clustering')
+    parser = argparse.ArgumentParser(prog='asreview semantic_clustering')
     group = parser.add_mutually_exclusive_group()
 
     group.add_argument(
