@@ -44,7 +44,7 @@ class SemClusEntryPoint(BaseEntryPoint):
 def _valid_file(param):
     base, ext = os.path.splitext(param)
     if ext.lower() not in ('.csv'):
-        raise argparse.ArgumentTypeError('File must have a csv extension')
+        raise argparse.ArgumentTypeError('File must have a .csv extension')
     return param
 
 
