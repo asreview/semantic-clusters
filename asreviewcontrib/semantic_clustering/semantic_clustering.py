@@ -158,7 +158,10 @@ def _visualize_clusters(tsne, labels):
 def _load_data(asreview_data_object):
 
     # extract title and abstract, drop empty abstracts and reset index
-    data = asreview_data_object.df[['title', 'abstract']].copy()
+    data = asreview_data_object.df[[
+        'title',
+        'abstract',
+        'label_included']].copy()
     data['abstract'] = data['abstract'].replace('', np.nan, inplace=False)
     data.dropna(subset=['abstract'], inplace=True)
     data = data.reset_index(drop=True)

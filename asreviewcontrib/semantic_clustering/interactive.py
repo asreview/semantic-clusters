@@ -21,7 +21,11 @@ def run_app(filepath):
     df['cluster_id'] = df['cluster_id'].astype(str)
 
     # Show main figure
-    fig = px.scatter(df, x="x", y="y", color="cluster_id",
+    fig = px.scatter(df,
+                     x="x",
+                     y="y",
+                     color="cluster_id",
+                     symbol="label_included",
                      color_discrete_sequence=px.colors.qualitative.Set1)
     fig.update_layout(dragmode="pan")
     fig.update_layout(xaxis=dict(showticklabels=False, title=""),
