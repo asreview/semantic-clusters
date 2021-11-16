@@ -4,9 +4,9 @@
 
 import argparse
 import sys
-import os
 
 import webbrowser
+from pathlib import Path
 
 from asreview.data import ASReviewData
 from asreview.entry_points import BaseEntryPoint
@@ -47,11 +47,9 @@ class SemClusEntryPoint(BaseEntryPoint):
 
 
 # check file extension
-def _valid_file(param):
-    base, ext = os.path.splitext(param)
-    if ext.lower() not in ('.csv'):
-        raise argparse.ArgumentTypeError('File must have a csv extension')
-    return param
+def _valid_file(fp):
+    if Path(fp).suffix.lower() != ".csv":
+        raise ValueError('File must have a .csv extension')
 
 
 # argument parser
@@ -118,5 +116,8 @@ def _parse_arguments(version="Unknown", argv=None):
 
     if args.output is not None:
         _valid_file(args.output)
+
+    if args.filepath is not None:
+        _valid_file(args.filepath.name)
 
     return args

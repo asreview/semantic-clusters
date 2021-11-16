@@ -33,6 +33,11 @@ def SemanticClustering(
         print("data folder exists, deleting...")
         os.system("del /F /Q data")
 
+    # if data folder exists, delete it
+    if os.path.exists("data"):
+        print("data folder exists, deleting...")
+        os.system("del /F /Q data")
+
     # load data
     print("Loading data...")
     data = _load_data(asreview_data_object)

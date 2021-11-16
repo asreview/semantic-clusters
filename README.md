@@ -76,7 +76,7 @@ asreview semantic_clustering -f <input.csv or url> -o <output_file.csv>
 Using `-f` will process a file and store the results in the file specified in
 `-o`. 
 
-semantic_clustering uses an [ASReview data
+Semantic_clustering uses an [`ASReviewData`
 object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
 and can handle either a file or url:
 
