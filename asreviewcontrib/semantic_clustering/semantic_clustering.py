@@ -5,17 +5,17 @@
 import os
 from tqdm import tqdm
 import numpy as np
+
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
-
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from dim_reduct import run_pca
-from dim_reduct import t_sne
-from clustering import run_KMeans
+from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
+from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
+from asreviewcontrib.semantic_clustering.clustering import run_KMeans
 
 # Setting environment
 logging.set_verbosity_error()
@@ -92,6 +92,7 @@ def SemanticClustering(asreview_data_object):
     # create file for use in interactive dashboard
     _create_file(data, tsne, labels)
 
+
 # Create functional dataframe and store to file for use in interactive
 def _create_file(data, coords, labels):
     data['x'] = coords[:, 0]
@@ -124,16 +125,17 @@ def _calc_optimal_n_clusters(features):
     for i in K:
         p1 = np.asarray((sum_of_squared_distances[0], 1))
         p2 = np.asarray(
-            (sum_of_squared_distances[-1], (len(sum_of_squared_distances)+1)))
-        p3 = np.asarray((sum_of_squared_distances[i-1], i))
+            (sum_of_squared_distances[-1], (len(sum_of_squared_distances) + 1)))
+        p3 = np.asarray((sum_of_squared_distances[i - 1], i))
 
-        m = np.cross(p2-p1, p3-p1)/norm(p2-p1)
+        m = np.cross(p2 - p1, p3 - p1) / norm(p2 - p1)
 
         if m > max:
             max = m
             clusters = i
 
     return clusters
+
 
 def _visualize_clusters(tsne, labels):
     fig, ax = plt.subplots()

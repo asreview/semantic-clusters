@@ -119,4 +119,4 @@ def run_app():
         return title
 
     # Run the application
-    app.run_server(debug=True)
+    app.run_server(debug=False)
