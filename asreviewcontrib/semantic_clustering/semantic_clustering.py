@@ -102,6 +102,7 @@ def _create_file(data, coords, labels, output_file):
 
     data.to_csv(output_file, index=None)
 
+
 # Calculate the optimal amount of clusters. It checks the inertia for 1 to 25
 # clusters, and picks the optimal inertia based on an elbow graph and some cool
 # trigonometry.
