@@ -11,7 +11,7 @@ interactive dashboard:
 
 ## Getting started
 
-The packaged is called `asreview-semantic-clustering` and can be installed from the download folder with:
+The packaged is called `semantic_clustering` and can be installed from the download folder with:
 
 ```shell
 pip install .
@@ -27,30 +27,30 @@ python -m pip install git+https://github.com/asreview/semantic-clusters.git
 For help use:
 
 ```shell
-asreview semantic-clustering -h
-asreview semantic-clustering --help
+asreview semantic_clustering -h
+asreview semantic_clustering --help
 ```
 
 Other options are:
 
 ```shell
-asreview semantic-clustering -f <input.csv or url> -o <output.csv>
-asreview semantic-clustering --filepath <input.csv or url> --output <output.csv>
+asreview semantic_clustering -f <input.csv or url> -o <output.csv>
+asreview semantic_clustering --filepath <input.csv or url> --output <output.csv>
 ```
 
 ```shell
-asreview semantic-clustering -t -o <output.csv>
-asreview semantic-clustering --testfile --output <output.csv>
+asreview semantic_clustering -t -o <output.csv>
+asreview semantic_clustering --testfile --output <output.csv>
 ```
 
 ```shell
-asreview semantic-clustering -a <output.csv>
-asreview semantic-clustering --app <output.csv>
+asreview semantic_clustering -a <output.csv>
+asreview semantic_clustering --app <output.csv>
 ```
 
 ```shell
-asreview semantic-clustering -v
-asreview semantic-clustering --version
+asreview semantic_clustering -v
+asreview semantic_clustering --version
 ```
 
 
@@ -62,8 +62,8 @@ following commands can be run:
 In the processing phase, a dataset is processed and clustered for use in the interactive interface. The following options are available:
 
 ```shell
-asreview semantic-clustering -f <input.csv or url> -o <output_file.csv>
-asreview semantic-clustering -t -o <output_file.csv>
+asreview semantic_clustering -f <input.csv or url> -o <output_file.csv>
+asreview semantic_clustering -t -o <output_file.csv>
 ```
 
 Using `-f` will process a file and store the results in the file specified in `-o`. 
@@ -73,8 +73,8 @@ Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.read
 Semantic-clustering uses an [ASReview data object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData), and can handle either a file or url:
 
 ```shell
-asreview semantic-clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
-asreview semantic-clustering -f van_de_Schoot_2017.csv -o output.csv
+asreview semantic_clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
+asreview semantic_clustering -f van_de_Schoot_2017.csv -o output.csv
 ```
 
 If an output file is not specified, `output.csv` is used as output file name.
@@ -83,11 +83,12 @@ If an output file is not specified, `output.csv` is used as output file name.
 Running the dashboard server is also done from the command line. This command will start a [Dash](https://plotly.com/dash/) server in the console and visualize the processed file.
 
 ```shell
-asreview semantic-clustering -a output.csv
-asreview semantic-clustering --app output.csv
+asreview semantic_clustering -a output.csv
+asreview semantic_clustering --app output.csv
 ```
 
 When the server has been started with the command above, it can be found at [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
+
 your browser.
 
 ## License

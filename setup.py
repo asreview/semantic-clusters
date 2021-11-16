@@ -55,7 +55,7 @@ setup(
 
     entry_points={
         "asreview.entry_points": [
-            "semantic-clustering = asreviewcontrib.semantic_clustering.main:SemClusEntryPoint",  # noqa: E501
+            "semantic_clustering = asreviewcontrib.semantic_clustering.main:SemClusEntryPoint",  # noqa: E501
         ]
     },
 

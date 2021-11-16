@@ -16,7 +16,7 @@ from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClus
 
 class SemClusEntryPoint(BaseEntryPoint):
     description = "Semantic clustering tools for ASReview."
-    extension_name = "asreview-semantic-clustering"
+    extension_name = "semantic_clustering"
 
     def __init__(self):
         self.version = "0.1"
@@ -50,7 +50,7 @@ def _valid_file(param):
 
 # argument parser
 def _parse_arguments(version="Unknown", argv=None):
-    parser = argparse.ArgumentParser(prog='asreview semantic clustering')
+    parser = argparse.ArgumentParser(prog='asreview semantic_clustering')
     group = parser.add_mutually_exclusive_group()
 
     group.add_argument(
@@ -63,7 +63,7 @@ def _parse_arguments(version="Unknown", argv=None):
     group.add_argument(
         "-t",
         "--testfile",
-        help="uses a test file instead of providing a file",
+        help="use a test file instead of providing a file",
         action="store_true",
     )
     group.add_argument(
@@ -90,7 +90,6 @@ def _parse_arguments(version="Unknown", argv=None):
         type=str,
         default="output.csv"
     )
-
     # Exit if no arguments are given
     if len(argv) == 0:
         parser.print_help(sys.stderr)
