@@ -11,8 +11,8 @@ interactive dashboard:
 
 # Getting started
 
-The packaged is called `semantic_clustering` and can be installed from
-the download folder with:
+The packaged is called `semantic_clustering` and can be installed from the
+download folder with:
 
 ```shell
 pip install .

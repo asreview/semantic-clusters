@@ -28,6 +28,11 @@ def SemanticClustering(
         output_file,
         transformer='allenai/scibert_scivocab_uncased'):
 
+    # if data folder exists, delete it
+    if os.path.exists("data"):
+        print("data folder exists, deleting...")
+        os.system("del /F /Q data")
+
     # load data
     print("Loading data...")
     data = _load_data(asreview_data_object)
@@ -101,7 +106,6 @@ def _create_file(data, coords, labels, output_file):
 # clusters, and picks the optimal inertia based on an elbow graph and some cool
 # trigonometry.
 def _calc_optimal_n_clusters(features):
-
     sum_of_squared_distances = []
 
     K = range(1, 25)
