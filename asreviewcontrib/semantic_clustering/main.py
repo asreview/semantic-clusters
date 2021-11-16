@@ -15,7 +15,7 @@ from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClus
 
 class SemClusEntryPoint(BaseEntryPoint):
     description = "Semantic clustering tools for ASReview."
-    extension_name = "asreview-semantic-clustering"
+    extension_name = "semantic_clustering"
 
     def __init__(self):
         self.version = "0.1"
