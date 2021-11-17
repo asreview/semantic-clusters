@@ -118,6 +118,6 @@ def _parse_arguments(version="Unknown", argv=None):
         _valid_file(args.output)
 
     if args.filepath is not None:
-        _valid_file(args.filepath.name)
+        _valid_file(args.filepath)
 
     return args

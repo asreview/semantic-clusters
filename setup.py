@@ -47,7 +47,7 @@ setup(
         "transformers",
         "numpy",
         "seaborn",
-        "torch",
+        "torch"
     ],
 
     extras_require={
