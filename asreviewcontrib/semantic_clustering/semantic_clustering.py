@@ -80,8 +80,8 @@ def SemanticClustering(
     labels = run_KMeans(tsne, n_clusters, 10)
 
     # visualize clusters
-    print("Visualizing clusters...")
-    _visualize_clusters(tsne, labels)
+    #print("Visualizing clusters...")
+    #_visualize_clusters(tsne, labels)
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
