@@ -60,10 +60,9 @@ def run_app(filepath):
             html.Div([
                 dcc.Graph(figure=fig, id="cluster-div", config=config,
                           style={'width': '100%',
-                                 'height': '500px',
-                                 'padding': '10px'
+                                 'height': '100%'
                                  },)
-            ], className="six columns"),
+            ], className="six columns", style={'height': '80%'}),
 
             # Div for abstract window
             html.Div([
@@ -72,12 +71,12 @@ def run_app(filepath):
                     readOnly=True,
                     placeholder='Enter a value...',
                     value='This is a TextArea component',
-                    style={'width': '100%', 'height': '389px'},
+                    style={'width': '98%', 'height': '389px'},
                     id="abstract-div"
                 )
             ], className="six columns"),
 
-        ], className="row"),
+        ], className="row", style={'height': '100%'}),
     ], style={'backgroundColor': 'rgba(0,0,0,0.1)',
               'position': 'fixed',
               'width': '100%',
