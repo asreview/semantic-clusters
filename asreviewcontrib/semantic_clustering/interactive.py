@@ -25,7 +25,7 @@ def run_app(filepath):
                      x="x",
                      y="y",
                      color="cluster_id",
-                     symbol="label_included",
+                     symbol="inclusion_label",
                      color_discrete_sequence=px.colors.qualitative.Set1)
     fig.update_layout(dragmode="pan")
     fig.update_layout(xaxis=dict(showticklabels=False, title=""),

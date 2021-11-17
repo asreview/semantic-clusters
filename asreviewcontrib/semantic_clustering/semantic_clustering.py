@@ -160,9 +160,9 @@ def _load_data(asreview_data_object):
     # extract title and abstract, drop empty abstracts and reset index
     data = asreview_data_object.df[[
         'title',
-        'abstract',
-        'label_included']].copy()
+        'abstract']].copy()
     data['abstract'] = data['abstract'].replace('', np.nan, inplace=False)
+    data['inclusion_label'] = asreview_data_object.labels
     data.dropna(subset=['abstract'], inplace=True)
     data = data.reset_index(drop=True)
 
