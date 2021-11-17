@@ -62,7 +62,7 @@ def _parse_arguments(version="Unknown", argv=None):
         "--filepath",
         metavar="INPUT FILEPATH",
         help="processes the specified file",
-        type=str,
+        type=argparse.FileType('r', encoding='UTF-8')
     )
     group.add_argument(
         "-t",
