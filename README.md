@@ -11,7 +11,8 @@ interactive dashboard:
 
 ## Getting started
 
-The packaged is called `semantic_clustering` and can be installed from the download folder with:
+The packaged is called `semantic_clustering` and can be installed from the
+download folder with:
 
 ```shell
 pip install .
@@ -55,22 +56,30 @@ asreview semantic_clustering --version
 
 
 ## Usage
-The functionality of the semantic clustering extension is implemented in a [subcommand extension](https://asreview.readthedocs.io/en/latest/API/extension_dev.html#subcommand-extensions). The
-following commands can be run:
+The functionality of the semantic clustering extension is implemented in a
+[subcommand
+extension](https://asreview.readthedocs.io/en/latest/API/extension_dev.html#subcommand-extensions).
+The following commands can be run:
 
 ### Processing
-In the processing phase, a dataset is processed and clustered for use in the interactive interface. The following options are available:
+In the processing phase, a dataset is processed and clustered for use in the
+interactive interface. The following options are available:
 
 ```shell
 asreview semantic_clustering -f <input.csv or url> -o <output_file.csv>
 asreview semantic_clustering -t -o <output_file.csv>
 ```
 
-Using `-f` will process a file and store the results in the file specified in `-o`. 
+Using `-f` will process a file and store the results in the file specified in
+`-o`. 
 
-Using `-t` instead of `-f` uses the [`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets) dataset instead. 
+Using `-t` instead of `-f` uses the
+[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets)
+dataset instead. 
 
-Semantic-clustering uses an [`ASReviewData` object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData), and can handle either a file or url:
+Semantic-clustering uses an [`ASReviewData`
+object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
+and can handle either a file or url:
 
 ```shell
 asreview semantic_clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
@@ -80,14 +89,17 @@ asreview semantic_clustering -f van_de_Schoot_2017.csv -o output.csv
 If an output file is not specified, `output.csv` is used as output file name.
 
 ### Dashboard
-Running the dashboard server is also done from the command line. This command will start a [Dash](https://plotly.com/dash/) server in the console and visualize the processed file.
+Running the dashboard server is also done from the command line. This command
+will start a [Dash](https://plotly.com/dash/) server in the console and
+visualize the processed file.
 
 ```shell
 asreview semantic_clustering -a output.csv
 asreview semantic_clustering --app output.csv
 ```
 
-When the server has been started with the command above, it can be found at [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
+When the server has been started with the command above, it can be found at
+[`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
 
 your browser.
 
