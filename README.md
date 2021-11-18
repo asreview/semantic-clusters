@@ -40,11 +40,6 @@ asreview semantic_clustering --filepath <input.csv or url> --output <output.csv>
 ```
 
 ```shell
-asreview semantic_clustering -t -o <output.csv>
-asreview semantic_clustering --testfile --output <output.csv>
-```
-
-```shell
 asreview semantic_clustering -a <output.csv>
 asreview semantic_clustering --app <output.csv>
 ```
