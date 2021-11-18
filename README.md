@@ -9,7 +9,7 @@ interactive dashboard:
 ![Alt Text](/docs/cord19_semantic_clusters.gif)
 
 
-# Getting started
+## Getting started
 
 The packaged is called `semantic_clustering` and can be installed from the
 download folder with:
@@ -23,7 +23,7 @@ or from the command line directly with:
 python -m pip install git+https://github.com/asreview/semantic-clusters.git
 ```
 
-## Commands
+### Commands
 
 For help use:
 
@@ -59,13 +59,13 @@ asreview semantic_clustering --transformer
 ```
 
 
-# Usage
+## Usage
 The functionality of the semantic clustering extension is implemented in a
 [subcommand
 extension](https://asreview.readthedocs.io/en/latest/API/extension_dev.html#subcommand-extensions).
 The following commands can be run:
 
-## Processing
+### Processing
 In the processing phase, a dataset is processed and clustered for use in the
 interactive interface. The following options are available:
 
@@ -110,7 +110,7 @@ Any pretrained model will work.
 [Here](https://huggingface.co/transformers/pretrained_models.html) is an example
 of models, but more exist.
 
-## Dashboard
+### Dashboard
 Running the dashboard server is also done from the command line. This command
 will start a [Dash](https://plotly.com/dash/) server in the console and
 visualize the processed file.
@@ -123,11 +123,11 @@ asreview semantic_clustering --app output.csv
 When the server has been started with the command above, it can be found at
 [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in your browser.
 
-# License
+## License
 
 MIT license
 
-# Contact
+## Contact
 Got ideas for improvement? For any questions or remarks, please send an email to
 [asreview@uu.nl](mailto:asreview@uu.nl).
 
