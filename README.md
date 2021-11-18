@@ -93,7 +93,7 @@ asreview semantic_clustering -t -o <output_file.csv>
 ```
 
 Using `-t` instead of `-f` uses the
-[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets)
+[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html#featured-datasets)
 dataset as input file. This way, the plugin can easily be tested.
 
 ### Transformer

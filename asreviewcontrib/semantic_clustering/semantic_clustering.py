@@ -51,7 +51,7 @@ def SemanticClustering(
     # data = data.iloc[:30, :]
 
     # load transformer and tokenizer
-    print("Loading tokenizer and model {0}...".format(transformer))
+    print(f"Loading tokenizer and model {transformer}...")
     tokenizer = AutoTokenizer.from_pretrained(transformer)
     model = AutoModel.from_pretrained(transformer)
 
@@ -94,8 +94,8 @@ def SemanticClustering(
     labels = run_KMeans(tsne, n_clusters, 10)
 
     # visualize clusters
-    print("Visualizing clusters...")
-    _visualize_clusters(tsne, labels)
+    # print("Visualizing clusters...")
+    # _visualize_clusters(tsne, labels)
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
