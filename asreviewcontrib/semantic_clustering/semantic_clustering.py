@@ -36,8 +36,10 @@ def run_clustering_steps(
 
     if REMOVE_DUPLICATES:
         try:
+            print("size before removing duplicates is {0}".format(len(data)))
             data["dup"] = asreview_data_object.df["duplicate_record_id"]
             data = data[data['dup'].isna()]
+            print("size after removing duplicates is {0}".format(len(data)))
         except KeyError:
             pass
 
@@ -74,7 +76,6 @@ def run_clustering_steps(
     # run pca
     print("Running PCA...")
     pca = PCA(n_components=.98)
-    #pca.fit(embeddings.tolist())
     pca = pca.fit_transform(embeddings.tolist())
 
     # run t-sne
