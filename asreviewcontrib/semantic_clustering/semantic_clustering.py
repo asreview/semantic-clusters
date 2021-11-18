@@ -10,10 +10,8 @@ from numpy.linalg import norm
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
 import seaborn as sns
-
-from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
-from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
-from asreviewcontrib.semantic_clustering.clustering import run_KMeans
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 
 # Setting environment
 logging.set_verbosity_error()
@@ -75,11 +73,18 @@ def run_clustering_steps(
 
     # run pca
     print("Running PCA...")
-    pca = run_pca(embeddings.tolist(), n_components=.98)
+    pca = PCA(n_components=.98)
+    #pca.fit(embeddings.tolist())
+    pca = pca.fit_transform(embeddings.tolist())
 
     # run t-sne
     print("Running t-SNE...")
-    tsne = t_sne(pca, n_iter=1000)
+    tsne = TSNE(n_components=2,
+                n_iter=1000,
+                perplexity=6,
+                n_jobs=4,
+                learning_rate=2000,
+                early_exaggeration=12).fit_transform(pca)
 
     # calculate optimal number of clusters
     print("Calculating optimal number of clusters...")
@@ -89,7 +94,8 @@ def run_clustering_steps(
     # run k-means. n_init is set to 10, this indicated the amount of restarts
     # for the KMeans algorithm. 10 is the sklearn default.
     print("Running k-means...")
-    labels = run_KMeans(tsne, n_clusters, 10)
+
+    labels = KMeans(n_clusters).fit(tsne).labels_
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
