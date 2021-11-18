@@ -35,13 +35,19 @@ def run_clustering_steps(
         "abstract": asreview_data_object.abstract,
         "included": asreview_data_object.included
     })
-    try:
-        data["dup"] = asreview_data_object.df["duplicate_record_id"]
-    except KeyError:
-        data["dup"] = None
 
     if REMOVE_DUPLICATES:
-        data.dropna(subset=["dup"], inplace=True)
+        try:
+            data["dup"] = asreview_data_object.df["duplicate_record_id"]
+            data = data[data['dup'].isna()]
+        except KeyError:
+            pass
+
+    # remove emptry abstracts
+    data = data[data['abstract'] != '']
+
+    # reset index
+    data.reset_index(drop=True, inplace=True)
 
     # load transformer and tokenizer
     print(f"Loading tokenizer and model {transformer}...")
@@ -50,7 +56,7 @@ def run_clustering_steps(
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    data['tokenized'] = data['abstract'].progress_apply(
+    encoded = data['abstract'].progress_apply(
         lambda x: tokenizer.encode_plus(
             x,
             add_special_tokens=False,
@@ -61,16 +67,15 @@ def run_clustering_steps(
 
     # generate embeddings and format correctly
     print("Generating embeddings...")
-    data['embeddings'] = data['tokenized'].progress_apply(lambda x: model(
-        **x,
-        output_hidden_states=False)[-1].detach().numpy().squeeze())
+    embeddings = encoded.progress_apply(
+        lambda x: model(x.input_ids, output_hidden_states=False)[-1].detach().numpy().squeeze())  # noqa: E501
 
     # from here on the data is not directly attached to the dataframe anymore,
     # as a result of legacy code. This will be fixed in a future PR.
 
     # run pca
     print("Running PCA...")
-    pca = run_pca(data['embeddings'].tolist(), n_components=.98)
+    pca = run_pca(embeddings.tolist(), n_components=.98)
 
     # run t-sne
     print("Running t-SNE...")
