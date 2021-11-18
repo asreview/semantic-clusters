@@ -40,7 +40,6 @@ def SemanticClustering(
 
     # load data
     print("Loading data...")
-    data = _load_data(asreview_data_object)
     data = pd.DataFrame({
         "title": asreview_data_object.title,
         "abstract": asreview_data_object.abstract,
