@@ -34,6 +34,9 @@ def run_clustering_steps(
         "included": asreview_data_object.included
     })
 
+    # remove emptry abstracts
+    data = data[data['abstract'] != '']
+
     if REMOVE_DUPLICATES:
         try:
             print("size before removing duplicates is {0}".format(len(data)))
@@ -42,9 +45,6 @@ def run_clustering_steps(
             print("size after removing duplicates is {0}".format(len(data)))
         except KeyError:
             pass
-
-    # remove emptry abstracts
-    data = data[data['abstract'] != '']
 
     # reset index
     data.reset_index(drop=True, inplace=True)
