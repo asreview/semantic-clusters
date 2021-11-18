@@ -11,7 +11,7 @@ from pathlib import Path
 from asreview.data import load_data
 from asreview.entry_points import BaseEntryPoint
 from asreviewcontrib.semantic_clustering.interactive import run_app
-from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering  # noqa: E501
+from asreviewcontrib.semantic_clustering.semantic_clustering import run_clustering_steps  # noqa: E501
 
 
 class SemClusEntryPoint(BaseEntryPoint):
@@ -27,7 +27,7 @@ class SemClusEntryPoint(BaseEntryPoint):
 
         if args.filepath:
             data = load_data(args.filepath)
-            SemanticClustering(
+            run_clustering_steps(
                 data,
                 args.output,
                 transformer=args.transformer)

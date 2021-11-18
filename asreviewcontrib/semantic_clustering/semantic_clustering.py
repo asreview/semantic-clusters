@@ -26,7 +26,7 @@ tqdm.pandas()
 REMOVE_DUPLICATES = True
 
 
-def SemanticClustering(
+def run_clustering_steps(
         asreview_data_object,
         output_file,
         transformer='allenai/scibert_scivocab_uncased'):
