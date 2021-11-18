@@ -54,6 +54,10 @@ asreview semantic_clustering -v
 asreview semantic_clustering --version
 ```
 
+```shell
+asreview semantic_clustering --transformer
+```
+
 
 ## Usage
 The functionality of the semantic clustering extension is implemented in a
@@ -67,17 +71,12 @@ interactive interface. The following options are available:
 
 ```shell
 asreview semantic_clustering -f <input.csv or url> -o <output_file.csv>
-asreview semantic_clustering -t -o <output_file.csv>
 ```
 
 Using `-f` will process a file and store the results in the file specified in
 `-o`. 
 
-Using `-t` instead of `-f` uses the
-[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html?highlight=ptsd#featured-datasets)
-dataset instead. 
-
-Semantic-clustering uses an [`ASReviewData`
+Semantic_clustering uses an [`ASReviewData`
 object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
 and can handle either a file or url:
 
@@ -87,6 +86,29 @@ asreview semantic_clustering -f van_de_Schoot_2017.csv -o output.csv
 ```
 
 If an output file is not specified, `output.csv` is used as output file name.
+
+### Test file
+```shell
+asreview semantic_clustering -t -o <output_file.csv>
+```
+
+Using `-t` instead of `-f` uses the
+[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html#featured-datasets)
+dataset as input file. This way, the plugin can easily be tested.
+
+### Transformer
+Semantic Clustering uses the
+[`allenai/scibert_scivocab_uncased`](https://github.com/allenai/scibert)
+transformer model as default setting. Using the `--transformer <model>` option,
+another model can be selected for use instead:
+
+```shell
+asreview semantic_clustering -t -o <output_file.csv> --transformer bert-base-uncased
+```
+
+Any pretrained model will work.
+[Here](https://huggingface.co/transformers/pretrained_models.html) is an example
+of models, but more exist.
 
 ### Dashboard
 Running the dashboard server is also done from the command line. This command
@@ -99,9 +121,7 @@ asreview semantic_clustering --app output.csv
 ```
 
 When the server has been started with the command above, it can be found at
-[`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in
-
-your browser.
+[`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in your browser.
 
 ## License
 

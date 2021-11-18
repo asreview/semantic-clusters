@@ -26,12 +26,18 @@ class SemClusEntryPoint(BaseEntryPoint):
             version=f"{self.extension_name}: {self.version}", argv=argv)
 
         if args.filepath:
-            data = ASReviewData.from_file(args.filepath.name)
-            SemanticClustering(data, args.output)
+            data = ASReviewData.from_file(args.filepath)
+            SemanticClustering(
+                data,
+                args.output,
+                transformer=args.transformer)
 
         elif args.testfile:
             data = ASReviewData.from_file("https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv")  # noqa: E501
-            SemanticClustering(data, args.output)
+            SemanticClustering(
+                data,
+                args.output,
+                transformer=args.transformer)
 
         elif args.app:
             url = "http://127.0.0.1:8050/"
@@ -88,6 +94,15 @@ def _parse_arguments(version="Unknown", argv=None):
         type=str,
         default="output.csv"
     )
+
+    parser.add_argument(
+        "--transformer",
+        help="select a transformer to use",
+        metavar="TRANSFORMER",
+        type=str,
+        default='allenai/scibert_scivocab_uncased'
+    )
+
     # Exit if no arguments are given
     if len(argv) == 0:
         parser.print_help(sys.stderr)
@@ -95,6 +110,7 @@ def _parse_arguments(version="Unknown", argv=None):
 
     args = parser.parse_args(argv)
 
+    # Check if the file extension is correct
     if args.app is not None:
         _valid_file(args.app.name)
 

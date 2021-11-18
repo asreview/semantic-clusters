@@ -23,12 +23,10 @@ sns.set()
 tqdm.pandas()
 
 
-def SemanticClustering(asreview_data_object, output_file):
-
-    # if data folder exists, delete it
-    if os.path.exists("data"):
-        print("data folder exists, deleting...")
-        os.system("del /F /Q data")
+def SemanticClustering(
+        asreview_data_object,
+        output_file,
+        transformer='allenai/scibert_scivocab_uncased'):
 
     # load data
     print("Loading data...")
@@ -38,12 +36,8 @@ def SemanticClustering(asreview_data_object, output_file):
     # down to decrease test duration. This will be removed in future versions
     # data = data.iloc[:30, :]
 
-    # load scibert transformer
-    print("Loading scibert transformer...")
-    transformer = 'allenai/scibert_scivocab_uncased'
-
     # load transformer and tokenizer
-    print("Loading tokenizer and model...")
+    print(f"Loading tokenizer and model {transformer}...")
     tokenizer = AutoTokenizer.from_pretrained(transformer)
     model = AutoModel.from_pretrained(transformer)
 
@@ -86,8 +80,8 @@ def SemanticClustering(asreview_data_object, output_file):
     labels = run_KMeans(tsne, n_clusters, 10)
 
     # visualize clusters
-    print("Visualizing clusters...")
-    _visualize_clusters(tsne, labels)
+    # print("Visualizing clusters...")
+    # _visualize_clusters(tsne, labels)
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
