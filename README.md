@@ -35,8 +35,8 @@ asreview semantic_clustering --help
 Other options are:
 
 ```shell
-asreview semantic_clustering -f <input.csv or url> -o <output.csv>
-asreview semantic_clustering --filepath <input.csv or url> --output <output.csv>
+asreview semantic_clustering -f <input> -o <output.csv>
+asreview semantic_clustering --filepath <input> --output <output.csv>
 ```
 
 ```shell
