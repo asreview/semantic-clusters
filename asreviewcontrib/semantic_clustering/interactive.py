@@ -30,7 +30,7 @@ def run_app(filepath):
                      x="x",
                      y="y",
                      color="cluster_id",
-                     color_discrete_sequence=px.colors.qualitative.Set1)
+                     color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(dragmode="pan")
     fig.update_layout(legend={'traceorder': 'normal'},
                       plot_bgcolor='rgba(0,0,0,0.35)',
