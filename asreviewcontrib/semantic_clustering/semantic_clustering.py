@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
-import os
-
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
@@ -11,7 +9,6 @@ from sklearn.cluster import KMeans
 from numpy.linalg import norm
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
@@ -93,10 +90,6 @@ def run_clustering_steps(
     print("Running k-means...")
     labels = run_KMeans(tsne, n_clusters, 10)
 
-    # visualize clusters
-    # print("Visualizing clusters...")
-    # _visualize_clusters(tsne, labels)
-
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
     _create_file(data, tsne, labels, output_file)
@@ -140,20 +133,3 @@ def _calc_optimal_n_clusters(features):
 
     return clusters
 
-
-def _visualize_clusters(tsne, labels):
-    fig, ax = plt.subplots()
-    ax.set_title("semantic clustering")
-    ax.set_xlabel("t-SNE Component 1")
-    ax.set_ylabel("t-SNE Component 2")
-
-    x = tsne[:, 0]
-    y = tsne[:, 1]
-
-    # Do actual plotting and save image
-    ax.scatter(x, y, c=labels, cmap="Set3")
-    if not os.path.exists("img"):
-        os.makedirs("img")
-    filename = "clusters.png"
-    img_path = os.path.join("img", filename)
-    fig.savefig(img_path)
