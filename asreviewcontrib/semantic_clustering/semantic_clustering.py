@@ -22,6 +22,8 @@ logging.set_verbosity_error()
 sns.set()
 tqdm.pandas()
 
+REMOVE_DUPLICATES = True
+
 
 def SemanticClustering(
         asreview_data_object,
@@ -40,6 +42,8 @@ def SemanticClustering(
     except KeyError:
         data["dup"] = None
 
+    if REMOVE_DUPLICATES:
+        data.dropna(subset=["dup"], inplace=True)
 
     # since processing the data can take a long time, for now the data is cut
     # down to decrease test duration. This will be removed in future versions
