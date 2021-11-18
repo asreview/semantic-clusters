@@ -8,7 +8,7 @@ import sys
 import webbrowser
 from pathlib import Path
 
-from asreview.data import ASReviewData
+from asreview.data import load_data
 from asreview.entry_points import BaseEntryPoint
 from asreviewcontrib.semantic_clustering.interactive import run_app
 from asreviewcontrib.semantic_clustering.semantic_clustering import SemanticClustering  # noqa: E501
@@ -26,14 +26,7 @@ class SemClusEntryPoint(BaseEntryPoint):
             version=f"{self.extension_name}: {self.version}", argv=argv)
 
         if args.filepath:
-            data = ASReviewData.from_file(args.filepath)
-            SemanticClustering(
-                data,
-                args.output,
-                transformer=args.transformer)
-
-        elif args.testfile:
-            data = ASReviewData.from_file("https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv")  # noqa: E501
+            data = load_data(args.filepath)
             SemanticClustering(
                 data,
                 args.output,
@@ -63,12 +56,6 @@ def _parse_arguments(version="Unknown", argv=None):
         metavar="INPUT FILEPATH",
         help="processes the specified file",
         type=str,
-    )
-    group.add_argument(
-        "-t",
-        "--testfile",
-        help="use a test file instead of providing a file",
-        action="store_true",
     )
     group.add_argument(
         "-a",
@@ -116,8 +103,5 @@ def _parse_arguments(version="Unknown", argv=None):
 
     if args.output is not None:
         _valid_file(args.output)
-
-    if args.filepath is not None:
-        _valid_file(args.filepath)
 
     return args
