@@ -5,7 +5,7 @@
 import os
 from tqdm import tqdm
 import numpy as np
-
+import pandas as pd
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
 from transformers import AutoTokenizer, AutoModel
@@ -41,6 +41,16 @@ def SemanticClustering(
     # load data
     print("Loading data...")
     data = _load_data(asreview_data_object)
+    data = pd.DataFrame({
+        "title": asreview_data_object.title,
+        "abstract": asreview_data_object.abstract,
+        "included": asreview_data_object.included
+    })
+    try:
+        data["dup"] = asreview_data_object.df["duplicate_record_id"]
+    except KeyError:
+        data["dup"] = None
+
 
     # since processing the data can take a long time, for now the data is cut
     # down to decrease test duration. This will be removed in future versions
@@ -153,17 +163,3 @@ def _visualize_clusters(tsne, labels):
     filename = "clusters.png"
     img_path = os.path.join("img", filename)
     fig.savefig(img_path)
-
-
-def _load_data(asreview_data_object):
-
-    # extract title and abstract, drop empty abstracts and reset index
-    data = asreview_data_object.df[[
-        'title',
-        'abstract']].copy()
-    data['abstract'] = data['abstract'].replace('', np.nan, inplace=False)
-    data['inclusion_label'] = asreview_data_object.labels
-    data.dropna(subset=['abstract'], inplace=True)
-    data = data.reset_index(drop=True)
-
-    return data
