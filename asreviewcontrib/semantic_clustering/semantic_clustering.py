@@ -56,19 +56,19 @@ def run_clustering_steps(
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    encoded = data['abstract'].progress_apply(
-        lambda x: tokenizer.encode_plus(
-            x,
-            add_special_tokens=False,
-            truncation=True,
-            max_length=512,
-            # padding='max_length',
-            return_tensors='pt'))
+    encoded = tokenizer.batch_encode_plus(
+        data['abstract'].tolist(),
+        add_special_tokens=False,
+        truncation=True,
+        max_length=200,
+        padding='max_length',
+        return_tensors='pt')
 
     # generate embeddings and format correctly
     print("Generating embeddings...")
-    embeddings = encoded.progress_apply(
-        lambda x: model(x.input_ids, output_hidden_states=False)[-1].detach().numpy().squeeze())  # noqa: E501
+    embeddings = []
+    for x in tqdm(encoded.input_ids):
+        embeddings.append(model(x.unsqueeze(0), output_hidden_states=False)[-1].detach().numpy().squeeze())  # noqa: E501
 
     # from here on the data is not directly attached to the dataframe anymore,
     # as a result of legacy code. This will be fixed in a future PR.
@@ -76,7 +76,7 @@ def run_clustering_steps(
     # run pca
     print("Running PCA...")
     pca = PCA(n_components=.98)
-    pca = pca.fit_transform(embeddings.tolist())
+    pca = pca.fit_transform(embeddings)
 
     # run t-sne
     print("Running t-SNE...")
