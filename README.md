@@ -78,23 +78,14 @@ Using `-f` will process a file and store the results in the file specified in
 
 Semantic_clustering uses an [`ASReviewData`
 object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
-and can handle either a file or url:
+and can handle files, urls and benchmark sets:
 
 ```shell
-asreview semantic_clustering -f "https://raw.githubusercontent.com/asreview/systematic-review-datasets/master/datasets/van_de_Schoot_2017/output/van_de_Schoot_2017.csv" -o output.csv
+asreview semantic_clustering -f benchmark:van_de_schoot_2017 -o output.csv
 asreview semantic_clustering -f van_de_Schoot_2017.csv -o output.csv
 ```
 
 If an output file is not specified, `output.csv` is used as output file name.
-
-### Test file
-```shell
-asreview semantic_clustering -t -o <output_file.csv>
-```
-
-Using `-t` instead of `-f` uses the
-[`van_de_Schoot_2017`](https://asreview.readthedocs.io/en/latest/intro/datasets.html#featured-datasets)
-dataset as input file. This way, the plugin can easily be tested.
 
 ### Transformer
 Semantic Clustering uses the
@@ -103,7 +94,7 @@ transformer model as default setting. Using the `--transformer <model>` option,
 another model can be selected for use instead:
 
 ```shell
-asreview semantic_clustering -t -o <output_file.csv> --transformer bert-base-uncased
+asreview semantic_clustering -f benchmark:van_de_schoot_2017 -o <output_file.csv> --transformer bert-base-uncased
 ```
 
 Any pretrained model will work.
