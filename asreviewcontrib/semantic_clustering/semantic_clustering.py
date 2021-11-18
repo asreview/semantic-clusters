@@ -43,10 +43,6 @@ def run_clustering_steps(
     if REMOVE_DUPLICATES:
         data.dropna(subset=["dup"], inplace=True)
 
-    # since processing the data can take a long time, for now the data is cut
-    # down to decrease test duration. This will be removed in future versions
-    # data = data.iloc[:30, :]
-
     # load transformer and tokenizer
     print(f"Loading tokenizer and model {transformer}...")
     tokenizer = AutoTokenizer.from_pretrained(transformer)
@@ -132,4 +128,3 @@ def _calc_optimal_n_clusters(features):
             clusters = i
 
     return clusters
-
