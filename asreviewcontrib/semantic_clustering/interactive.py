@@ -22,7 +22,7 @@ def run_app(filepath):
 
     # Set 'cluster_id' to max if 'inclusion_label' == 1
     for row in df.itertuples():
-        if row.inclusion_label == 1:
+        if row.included == 1:
             df.at[row.Index, 'cluster_id'] = 'included'
 
     # Show main figure
