@@ -39,8 +39,8 @@ def run_clustering_steps(
 
     if REMOVE_DUPLICATES:
         try:
-            print("size before removing duplicates is {0}".format(len(data)))
             data["dup"] = asreview_data_object.df["duplicate_record_id"]
+            print("Size before removing duplicates is {0}".format(len(data)))
             data = data[data['dup'].isna()]
             print("size after removing duplicates is {0}".format(len(data)))
         except KeyError:
