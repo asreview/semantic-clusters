@@ -95,18 +95,12 @@ def run_clustering_steps(
     # run k-means. n_init is set to 10, this indicated the amount of restarts
     # for the KMeans algorithm. 10 is the sklearn default.
     print("Running k-means...")
-
     labels = KMeans(n_clusters).fit(tsne).labels_
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
-    _create_file(data, tsne, labels, output_file)
-
-
-# Create functional dataframe and store to file for use in interactive
-def _create_file(data, coords, labels, output_file):
-    data['x'] = coords[:, 0]
-    data['y'] = coords[:, 1]
+    data['x'] = tsne[:, 0]
+    data['y'] = tsne[:, 1]
     data['cluster_id'] = labels
 
     data.to_csv(output_file, index=None)
