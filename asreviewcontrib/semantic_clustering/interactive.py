@@ -20,12 +20,24 @@ def run_app(filepath):
     # Read as STR for discrete colormap
     df['cluster_id'] = df['cluster_id'].astype(str)
 
+    # Set 'cluster_id' to max if 'inclusion_label' == 1
+    for row in df.itertuples():
+        if row.included == 1:
+            df.at[row.Index, 'cluster_id'] = 'included'
+
     # Show main figure
-    fig = px.scatter(df, x="x", y="y", color="cluster_id",
-                     color_discrete_sequence=px.colors.qualitative.Set1)
+    fig = px.scatter(df,
+                     x="x",
+                     y="y",
+                     color="cluster_id",
+                     color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(dragmode="pan")
+    fig.update_layout(legend={'traceorder': 'normal'},
+                      plot_bgcolor='rgba(0,0,0,0.35)',
+                      height=400,)
     fig.update_layout(xaxis=dict(showticklabels=False, title=""),
                       yaxis=dict(showticklabels=False, ticks="", title=""))
+
     config = dict(
         {'scrollZoom': True,
             'displayModeBar': False,
@@ -46,8 +58,11 @@ def run_app(filepath):
 
             # Main semantic cluster graph
             html.Div([
-                dcc.Graph(figure=fig, id="cluster-div", config=config)
-            ], className="six columns"),
+                dcc.Graph(figure=fig, id="cluster-div", config=config,
+                          style={'width': '100%',
+                                 'height': '100%'
+                                 },)
+            ], className="six columns", style={'height': '80%'}),
 
             # Div for abstract window
             html.Div([
@@ -56,13 +71,21 @@ def run_app(filepath):
                     readOnly=True,
                     placeholder='Enter a value...',
                     value='This is a TextArea component',
-                    style={'width': '100%', 'height': '300px'},
+                    style={'width': '98%', 'height': '389px'},
                     id="abstract-div"
                 )
             ], className="six columns"),
 
-        ], className="row"),
-    ])
+        ], className="row", style={'height': '100%'}),
+    ], style={'backgroundColor': 'rgba(0,0,0,0.1)',
+              'position': 'fixed',
+              'width': '100%',
+              'height': '100%',
+              'top': '0',
+              'left': '0',
+              'z-index': '10',
+              'padding': '10px'
+              })
 
     # Allow global css - use chriddyp's time-tested external css
     app.css.config.serve_locally = False

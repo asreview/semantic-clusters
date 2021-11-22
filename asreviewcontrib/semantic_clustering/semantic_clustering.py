@@ -2,39 +2,52 @@
 # -*- coding: utf-8 -*-
 # Path: asreviewcontrib\semantic_clustering\semantic_clustering.py
 
-import os
 from tqdm import tqdm
 import numpy as np
-
+import pandas as pd
 from sklearn.cluster import KMeans
 from numpy.linalg import norm
 from transformers import AutoTokenizer, AutoModel
 from transformers import logging
-import matplotlib.pyplot as plt
 import seaborn as sns
-
-from asreviewcontrib.semantic_clustering.dim_reduct import run_pca
-from asreviewcontrib.semantic_clustering.dim_reduct import t_sne
-from asreviewcontrib.semantic_clustering.clustering import run_KMeans
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 
 # Setting environment
 logging.set_verbosity_error()
 sns.set()
 tqdm.pandas()
 
+REMOVE_DUPLICATES = True
 
-def SemanticClustering(
+
+def run_clustering_steps(
         asreview_data_object,
         output_file,
         transformer='allenai/scibert_scivocab_uncased'):
 
     # load data
     print("Loading data...")
-    data = _load_data(asreview_data_object)
+    data = pd.DataFrame({
+        "title": asreview_data_object.title,
+        "abstract": asreview_data_object.abstract,
+        "included": asreview_data_object.included
+    })
 
-    # since processing the data can take a long time, for now the data is cut
-    # down to decrease test duration. This will be removed in future versions
-    # data = data.iloc[:30, :]
+    # remove emptry abstracts
+    data = data[data['abstract'] != '']
+
+    if REMOVE_DUPLICATES:
+        try:
+            data["dup"] = asreview_data_object.df["duplicate_record_id"]
+            print("Size before removing duplicates is {0}".format(len(data)))
+            data = data[data['dup'].isna()]
+            print("Size after removing duplicates is {0}".format(len(data)))
+        except KeyError:
+            pass
+
+    # reset index
+    data.reset_index(drop=True, inplace=True)
 
     # load transformer and tokenizer
     print(f"Loading tokenizer and model {transformer}...")
@@ -43,31 +56,36 @@ def SemanticClustering(
 
     # tokenize abstracts and add to data
     print("Tokenizing abstracts...")
-    data['tokenized'] = data['abstract'].progress_apply(
-        lambda x: tokenizer.encode_plus(
-            x,
-            add_special_tokens=False,
-            truncation=True,
-            max_length=512,
-            # padding='max_length',
-            return_tensors='pt'))
+    encoded = tokenizer.batch_encode_plus(
+        data['abstract'].tolist(),
+        add_special_tokens=False,
+        truncation=True,
+        max_length=200,
+        padding='max_length',
+        return_tensors='pt')
 
     # generate embeddings and format correctly
     print("Generating embeddings...")
-    data['embeddings'] = data['tokenized'].progress_apply(lambda x: model(
-        **x,
-        output_hidden_states=False)[-1].detach().numpy().squeeze())
+    embeddings = []
+    for x in tqdm(encoded.input_ids):
+        embeddings.append(model(x.unsqueeze(0), output_hidden_states=False)[-1].detach().numpy().squeeze())  # noqa: E501
 
     # from here on the data is not directly attached to the dataframe anymore,
     # as a result of legacy code. This will be fixed in a future PR.
 
     # run pca
     print("Running PCA...")
-    pca = run_pca(data['embeddings'].tolist(), n_components=.98)
+    pca = PCA(n_components=.98)
+    pca = pca.fit_transform(embeddings)
 
     # run t-sne
     print("Running t-SNE...")
-    tsne = t_sne(pca, n_iter=1000)
+    tsne = TSNE(n_components=2,
+                n_iter=1000,
+                perplexity=6,
+                n_jobs=4,
+                learning_rate=2000,
+                early_exaggeration=12).fit_transform(pca)
 
     # calculate optimal number of clusters
     print("Calculating optimal number of clusters...")
@@ -77,21 +95,12 @@ def SemanticClustering(
     # run k-means. n_init is set to 10, this indicated the amount of restarts
     # for the KMeans algorithm. 10 is the sklearn default.
     print("Running k-means...")
-    labels = run_KMeans(tsne, n_clusters, 10)
-
-    # visualize clusters
-    # print("Visualizing clusters...")
-    # _visualize_clusters(tsne, labels)
+    labels = KMeans(n_clusters).fit(tsne).labels_
 
     # create file for use in interactive dashboard
     print("Creating file {0}...".format(output_file))
-    _create_file(data, tsne, labels, output_file)
-
-
-# Create functional dataframe and store to file for use in interactive
-def _create_file(data, coords, labels, output_file):
-    data['x'] = coords[:, 0]
-    data['y'] = coords[:, 1]
+    data['x'] = tsne[:, 0]
+    data['y'] = tsne[:, 1]
     data['cluster_id'] = labels
 
     data.to_csv(output_file, index=None)
@@ -125,32 +134,3 @@ def _calc_optimal_n_clusters(features):
             clusters = i
 
     return clusters
-
-
-def _visualize_clusters(tsne, labels):
-    fig, ax = plt.subplots()
-    ax.set_title("semantic clustering")
-    ax.set_xlabel("t-SNE Component 1")
-    ax.set_ylabel("t-SNE Component 2")
-
-    x = tsne[:, 0]
-    y = tsne[:, 1]
-
-    # Do actual plotting and save image
-    ax.scatter(x, y, c=labels, cmap="Set3")
-    if not os.path.exists("img"):
-        os.makedirs("img")
-    filename = "clusters.png"
-    img_path = os.path.join("img", filename)
-    fig.savefig(img_path)
-
-
-def _load_data(asreview_data_object):
-
-    # extract title and abstract, drop empty abstracts and reset index
-    data = asreview_data_object.df[['title', 'abstract']].copy()
-    data['abstract'] = data['abstract'].replace('', np.nan, inplace=False)
-    data.dropna(subset=['abstract'], inplace=True)
-    data = data.reset_index(drop=True)
-
-    return data
