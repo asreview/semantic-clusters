@@ -1,12 +1,9 @@
 # ASReview Semantic Clustering
 This repository contains the Semantic Clustering plugin for
 [ASReview](https://github.com/asreview/asreview). It applies multiple techniques
-(SciBert, PCA, T-SNE, KMeans, a custom Cluster Optimizer) to an [ASReview data
-object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
+(SciBert, PCA, T-SNE, KMeans, a custom Cluster Optimizer) to a [ASReview compatible](https://asreview.readthedocs.io/en/latest/intro/datasets.html) dataset
 in order to cluster records based on semantic differences. The end result is an
-interactive dashboard:
-
-![Alt Text](/docs/cord19_semantic_clusters.gif)
+interactive dashboard.
 
 
 ## Installation
@@ -23,78 +20,33 @@ or from the command line directly with:
 python -m pip install git+https://github.com/asreview/semantic-clusters.git
 ```
 
-### Commands
-
-For help use:
+For help with usage, and to see available commands, use:
 
 ```shell
 asreview semantic_clustering -h
-asreview semantic_clustering --help
 ```
-
-Other options are:
-
-```shell
-asreview semantic_clustering -f <input> -o <output.csv>
-asreview semantic_clustering --filepath <input> --output <output.csv>
-```
-
-```shell
-asreview semantic_clustering -a <output.csv>
-asreview semantic_clustering --app <output.csv>
-```
-
-```shell
-asreview semantic_clustering -v
-asreview semantic_clustering --version
-```
-
-```shell
-asreview semantic_clustering --transformer
-```
-
+The semantic clustering extension is a subcommand extension, meaning its usage is implemented via the command line interface. For more information on subcommand extensions, see the [subcommand extension documentation](https://asreview.readthedocs.io/en/latest/extensions/overview_extensions.html#subcommand-extensions).
 
 ## Usage
-The functionality of the semantic clustering extension is implemented in a
-[subcommand
-extension](https://asreview.readthedocs.io/en/latest/API/extension_dev.html#subcommand-extensions).
-The following commands can be run:
+Before the dashboard can be initiated, the dataset has to be prepared and clustered.
 
 ### Processing
-In the processing phase, a dataset is processed and clustered for use in the
-interactive interface. The following options are available:
+Processing a file is done using the `filepath` and `output` options. The `-f` argument points towards a file to be processed, and the results are stored in the file specified in `-o`:
 
 ```shell
 asreview semantic_clustering -f <input.csv or url> -o <output_file.csv>
 ```
 
-Using `-f` will process a file and store the results in the file specified in
-`-o`. 
-
-Semantic_clustering uses an [`ASReviewData`
-object](https://asreview.readthedocs.io/en/latest/API/generated/asreview.data.ASReviewData.html#asreview.data.ASReviewData),
-and can handle files, urls and benchmark sets:
+Semantic_clustering uses the ASReview data format and can handle files, urls and benchmark sets:
 
 ```shell
 asreview semantic_clustering -f benchmark:van_de_schoot_2017 -o output.csv
-asreview semantic_clustering -f van_de_Schoot_2017.csv -o output.csv
+asreview semantic_clustering -f input\van_de_Schoot_2017.csv -o output.csv
+asreview semantic_clustering -f https://url-to-file.org/file.csv -o output.csv
 ```
+For information on how to prepare a file for use with ASReview or the extension, see the [ASReview dataset documentation](https://asreview.readthedocs.io/en/latest/intro/datasets.html).
 
-If an output file is not specified, `output.csv` is used as output file name.
-
-### Transformer
-Semantic Clustering uses the
-[`allenai/scibert_scivocab_uncased`](https://github.com/allenai/scibert)
-transformer model as default setting. Using the `--transformer <model>` option,
-another model can be selected for use instead:
-
-```shell
-asreview semantic_clustering -f benchmark:van_de_schoot_2017 -o <output_file.csv> --transformer bert-base-uncased
-```
-
-Any pretrained model will work.
-[Here](https://huggingface.co/transformers/pretrained_models.html) is an example
-of models, but more exist.
+*Note: If an output file is not specified, `output.csv` is used instead.*
 
 ### Dashboard
 Running the dashboard server is also done from the command line. This command
@@ -102,12 +54,26 @@ will start a [Dash](https://plotly.com/dash/) server in the console and
 visualize the processed file.
 
 ```shell
-asreview semantic_clustering -a output.csv
 asreview semantic_clustering --app output.csv
 ```
 
 When the server has been started with the command above, it can be found at
 [`http://127.0.0.1:8050/`](http://127.0.0.1:8050/) in your browser.
+
+
+### Transformer
+An advanced option is the usage of special transformers. Semantic Clustering uses the
+[`allenai/scibert_scivocab_uncased`](https://github.com/allenai/scibert)
+transformer model by default, but by using the `--transformer <model>` option,
+another model can be selected for use:
+
+```shell
+asreview semantic_clustering -f <file> -o <output_file.csv> --transformer bert-base-uncased
+```
+
+Any pretrained model will work.
+[Here](https://huggingface.co/transformers/pretrained_models.html) is an example
+of models, but more exist.
 
 ## License
 
