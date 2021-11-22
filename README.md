@@ -9,7 +9,7 @@ interactive dashboard:
 ![Alt Text](/docs/cord19_semantic_clusters.gif)
 
 
-## Getting started
+## Installation
 
 The packaged is called `semantic_clustering` and can be installed from the
 download folder with:
